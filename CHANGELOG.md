@@ -1,3 +1,3 @@
-## 1.0.0
+# 0.1.0
 
-- Initial version.
+Initial Version of the strategic logger.

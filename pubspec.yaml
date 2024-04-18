@@ -1,11 +1,14 @@
 name: strategic_logger
 description: A strategic logger solution for many strategies like Crashlytics, Analytics, ConsoleLog and many as you want.
-version: 0.0.1
+version: 0.1.0
+repository: https://github.com/sauloroncon/strategic_logger
+issue_tracker: https://github.com/sauloroncon/strategic_logger/issues
+homepage: https://github.com/sauloroncon/strategic_logger
+documentation: https://github.com/sauloroncon/strategic_logger.git/readme
+topics: [logger, crashlytics, firebase, log, logging, error, fatal]
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
-  flutter: ">=1.17.0"
-
 
 dependencies:
   firebase_crashlytics: ^3.5.1
