@@ -2,9 +2,9 @@ Strategic Logger
 ================
 
 Strategic Logger is a versatile logging framework designed to support multiple logging strategies, including console logging, Firebase Analytics, and Firebase Crashlytics. It's built to be flexible and easy to extend, making it ideal for applications of any size that need reliable logging mechanisms. 
-
+```html
 <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="sauloroncon" data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
-
+```
 Features
 --------
 
