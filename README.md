@@ -1,4 +1,4 @@
-Strategic Logger
+Strategic Logger - Log Smart, Not Hard – One Call Logs All!
 ================
 
 Strategic Logger is a versatile logging framework designed to support multiple logging strategies, including console logging, Firebase Analytics, and Firebase Crashlytics. It's built to be flexible and easy to extend, making it ideal for applications of any size that need reliable logging mechanisms. 
