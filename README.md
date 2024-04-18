@@ -44,11 +44,15 @@ void main() {
 
 Logging messages is straightforward:
 
+```dart
 logger.log('This is an info log');logger.error('This is an error message');logger.fatal('This is a fatal error');
+```
 
 You can also log detailed events:
 
+```dart
 logger.log('User logged in', event: LogEvent(eventName: 'user\_login'));
+```
 
 Documentation
 -------------
@@ -60,7 +64,9 @@ Extending the Logger
 
 To add a custom log strategy, extend the LogStrategy class:
 
+```dart
 class MyCustomLogStrategy extends LogStrategy {@overrideFuture log({dynamic message, LogEvent? event}) async {// Implement custom logging logic here}}
+```
 
 Register your custom strategy during logger initialization.
 
