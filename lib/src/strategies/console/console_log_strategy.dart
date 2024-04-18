@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:strategic_logger/logger_extension.dart';
-import 'package:strategic_logger/logger_usage.dart';
+import 'package:strategic_logger/logger.dart';
 
 /// A [LogStrategy] implementation that logs messages, errors, and fatal errors to the console.
 ///

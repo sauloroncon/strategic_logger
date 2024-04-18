@@ -1,10 +1,10 @@
-/// Provides a logging framework with built-in strategies for console, Firebase Analytics,
-/// and Firebase Crashlytics integration.
+/// Provides a logging framework with built-in strategies for console, Sentry,
+/// and other analytics integration.
 ///
 /// This library is designed to facilitate easy and structured logging across different platforms
 /// and services, encapsulating complexity within pre-defined strategies. It's suitable for applications
-/// that need straightforward logging capabilities with minimal setup.
-library logger_usage;
+/// that need robust logging capabilities with minimal setup, including error tracking and performance monitoring.
+library logger;
 
 /// Initializes the logger with default settings. Example usage:
 ///
@@ -35,33 +35,19 @@ export 'src/strategies/console/console_log_strategy.dart';
 /// Represents a log event specifically formatted for console output.
 export 'src/strategies/console/console_log_event.dart';
 
-/// Log event specifically tailored for Firebase Analytics.
+/// A logging strategy that integrates with Sentry.
+///
+/// This strategy sends logging information to Sentry, allowing for detailed
+/// error tracking and performance monitoring within the Sentry platform. It's ideal for applications that
+/// require robust error handling and insights into issues occurring in production environments.
+export 'src/strategies/sentry/sentry_log_strategy.dart';
+
+/// Log event specifically tailored for Sentry.
 ///
 /// This class is an extension of the generic LogEvent tailored to meet the requirements
-/// of Firebase Analytics, providing a structured way to send event data to Firebase.
-/// It should be used when detailed analytics about application behavior are needed.
-export 'src/strategies/analytics/firebase_analytics_log_event.dart';
-
-/// A logging strategy that integrates with Firebase Analytics.
-///
-/// This strategy sends logging information to Firebase Analytics, allowing for detailed
-/// analysis and tracking within the Firebase platform. It's ideal for applications that
-/// require insights into user interactions and app functionality via Firebase's analytics tools.
-export 'src/strategies/analytics/firebase_analytics_log_strategy.dart';
-
-/// Log event specifically tailored for Firebase Crashlytics.
-///
-/// Extends LogEvent to suit the specific needs of Firebase Crashlytics logging, such as
-/// reporting errors and crashes. It provides a convenient way to structure error-related
-/// data and send it to Firebase Crashlytics for detailed crash analysis and monitoring.
-export 'src/strategies/crashlytics/firebase_crashlytics_log_event.dart';
-
-/// A logging strategy that integrates with Firebase Crashlytics.
-///
-/// This strategy is designed to log critical issues to Firebase Crashlytics, enhancing
-/// the ability to track and analyze application crashes and significant errors.
-/// It's particularly useful for maintaining high reliability and quick debugging in production environments.
-export 'src/strategies/crashlytics/firebase_crashlytics_log_strategy.dart';
+/// of Sentry, providing a structured way to send error data and performance metrics to Sentry.
+/// It should be used when detailed error analysis and monitoring are needed.
+export 'src/strategies/sentry/sentry_log_event.dart';
 
 /// Error thrown when an attempt is made to re-initialize an already initialized logger.
 ///

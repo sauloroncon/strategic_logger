@@ -2,7 +2,8 @@ import 'dart:developer' as developer;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:strategic_logger/logger_extension.dart';
-import 'package:strategic_logger/logger_usage.dart';
+
+import 'firebase_analytics_log_event.dart';
 
 /// A [LogStrategy] implementation that utilizes Firebase Analytics to log events, errors, and fatal incidents.
 ///

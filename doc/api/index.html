@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="strategic_logger API docs, for the Dart programming language.">
+  <title>strategic_logger - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://github.com/sauloroncon/strategic_logger">strategic_logger package</a></li>
+  </ol>
+  <div class="self-name">strategic_logger</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="strategic-logger---log-smart-not-hard--one-call-logs-all">Strategic Logger - Log Smart, Not Hard – One Call Logs All!</h1>
+<p>Strategic Logger is a versatile logging framework designed to support multiple logging strategies, including console logging, Firebase Analytics, and Firebase Crashlytics. It's built to be flexible and easy to extend, making it ideal for applications of any size that need reliable logging mechanisms.</p>
+<p><a href="https://www.buymeacoffee.com/sauloroncon" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a></p>
+<h2 id="features">Features</h2>
+<ul>
+<li>
+<p><strong>Multiple Log Strategies</strong>: Easily integrate with different logging services like Firebase Analytics and Firebase Crashlytics.</p>
+</li>
+<li>
+<p><strong>Customizable</strong>: Extendable to include custom logging strategies depending on your application needs.</p>
+</li>
+<li>
+<p><strong>Easy to Use</strong>: Simple API for logging messages, errors, and fatal incidents across all integrated services.</p>
+</li>
+<li>
+<p><strong>Robust Error Handling</strong>: Includes predefined error types for handling common logging errors effectively.</p>
+</li>
+</ul>
+<h2 id="getting-started">Getting Started</h2>
+<p>To get started with Strategic Logger, add it to your project as a dependency:</p>
+<p>dependencies:strategic_logger: ^1.0.0</p>
+<h3 id="initialization">Initialization</h3>
+<p>Initialize the logger once during the startup of your application:</p>
+<pre class="language-dart"><code class="language-dart">import 'package:strategic\_logger/strategic\_logger.dart';
+
+void main() {
+    logger.initialize(
+        level: LogLevel.info,
+        strategies: [
+            ConsoleLogStrategy(),
+            FirebaseAnalyticsLogStrategy(),
+            FirebaseCrashlyticsLogStrategy(),
+        ],
+    );
+}
+</code></pre>
+<h3 id="usage">Usage</h3>
+<p>Logging messages is straightforward:</p>
+<pre class="language-dart"><code class="language-dart">logger.log('This is an info log');
+logger.error('This is an error message');
+logger.fatal('This is a fatal error');
+</code></pre>
+<p>You can also log detailed events:</p>
+<pre class="language-dart"><code class="language-dart">
+logger.log('User logged in', event: LogEvent(eventName: 'user\_login'));
+
+</code></pre>
+<h2 id="documentation">Documentation</h2>
+<p>For full documentation, including all configuration options and advanced usage examples, visit [Documentation Link].</p>
+<h2 id="extending-the-logger">Extending the Logger</h2>
+<p>To add a custom log strategy, extend the LogStrategy class:</p>
+<pre class="language-dart"><code class="language-dart">
+class MyCustomLogStrategy extends LogStrategy {
+    @override
+    Future log({dynamic message, LogEvent? event}) async {
+    // Implement custom logging logic here
+    }
+}
+</code></pre>
+<p>Register your custom strategy during logger initialization.</p>
+<h2 id="contributing">Contributing</h2>
+<p>Contributions are welcome! Please read the contributing guide on our GitHub repository to get started.</p>
+<h2 id="license">License</h2>
+<p>Strategic Logger is released under the MIT License.</p>
+<h2 id="notes-for-enhancement">Notes for Enhancement</h2>
+<ul>
+<li>
+<p><strong>Examples</strong>: Include more detailed examples that showcase complex scenarios or integration with other systems.</p>
+</li>
+<li>
+<p><strong>Advanced Configuration</strong>: If your logger supports dynamic levels or filters, document how to configure these.</p>
+</li>
+<li>
+<p><strong>Community and Support</strong>: Mention how users can ask questions, report issues, or contribute to the documentation.</p>
+</li>
+<li>
+<p><strong>Versioning and Updates</strong>: Provide information on how the project handles new versions and backward compatibility.</p>
+</li>
+</ul>
+<p>By ensuring that your README.md is clear, informative, and comprehensive, you enhance the usability of your package and help ensure it meets the quality standards expected by the Dart and Flutter community on pub.dev.</p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="logger">
+  <span class="name"><a href="logger/logger-library.html">logger</a></span> 
+
+</dt>
+<dd>Provides a logging framework with built-in strategies for console, Sentry,
+and other analytics integration.
+</dd>
+
+          <dt id="logger_extension">
+  <span class="name"><a href="logger_extension/logger_extension-library.html">logger_extension</a></span> 
+
+</dt>
+<dd>Provides the necessary components for extending the Strategic Logger with custom logging strategies.
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="https://github.com/sauloroncon/strategic_logger">strategic_logger package</a></li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">strategic_logger</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="logger/logger-library.html">logger</a></li>
+      <li><a href="logger_extension/logger_extension-library.html">logger_extension</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    strategic_logger
+      0.1.5
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

@@ -1,4 +1,4 @@
-import 'package:strategic_logger/logger_usage.dart';
+import 'package:strategic_logger/logger.dart';
 
 /// A subclass of [LogEvent] designed for integration with Firebase Analytics.
 ///

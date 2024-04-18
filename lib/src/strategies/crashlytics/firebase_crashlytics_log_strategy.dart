@@ -1,7 +1,9 @@
 import 'dart:developer' as developer;
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:strategic_logger/logger_extension.dart';
-import 'package:strategic_logger/logger_usage.dart';
+import 'package:strategic_logger/logger.dart';
+
+import 'firebase_crashlytics_log_event.dart';
 
 /// A [LogStrategy] implementation that logs messages and errors to Firebase Crashlytics.
 ///

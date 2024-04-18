@@ -1,4 +1,8 @@
-# 0.1.5-beta
+# 0.1.6
+
+Sentry Strategy dartdoc updated
+
+# 0.1.5
 
 Sentry Strategy created
 

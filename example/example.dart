@@ -1,4 +1,8 @@
-import 'package:strategic_logger/logger_usage.dart';
+import 'package:strategic_logger/logger.dart';
+import 'package:strategic_logger/src/strategies/analytics/firebase_analytics_log_event.dart';
+import 'package:strategic_logger/src/strategies/analytics/firebase_analytics_log_strategy.dart';
+import 'package:strategic_logger/src/strategies/crashlytics/firebase_crashlytics_log_event.dart';
+import 'package:strategic_logger/src/strategies/crashlytics/firebase_crashlytics_log_strategy.dart';
 
 /// Example demonstrating the initialization, configuration, and usage of Strategic Logger with multiple log strategies.
 ///
