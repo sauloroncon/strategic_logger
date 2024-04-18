@@ -1,3 +1,7 @@
+# 0.1.5-beta
+
+Sentry Strategy created
+
 # 0.1.4
 
 Dart Format
