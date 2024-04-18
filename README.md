@@ -25,11 +25,11 @@ dependencies:strategic\_logger: ^1.0.0
 ### Initialization
 
 Initialize the logger once during the startup of your application:
-
+```dart
 import 'package:strategic\_logger/strategic\_logger.dart';
 
 void main() {logger.initialize(level: LogLevel.info,strategies: \[ConsoleLogStrategy(),FirebaseAnalyticsLogStrategy(),FirebaseCrashlyticsLogStrategy(),\],);}
-
+```
 ### Usage
 
 Logging messages is straightforward:
