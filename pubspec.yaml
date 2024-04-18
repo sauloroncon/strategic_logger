@@ -1,7 +1,6 @@
 name: strategic_logger
 description: A strategic logger solution for many strategies like Crashlytics, Analytics, ConsoleLog and many as you want.
 version: 0.0.1
-publish_to: none
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
