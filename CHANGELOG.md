@@ -1,3 +1,7 @@
+# 0.1.4
+
+Dart Format
+
 # 0.1.3
 
 Example Adjustments

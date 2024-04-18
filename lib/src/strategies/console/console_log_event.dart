@@ -1,5 +1,3 @@
-
-
 import 'package:strategic_logger/logger_usage.dart';
 
 /// A subclass of [LogEvent] specifically tailored for logging events to the console.
@@ -24,11 +22,8 @@ class ConsoleLogEvent extends LogEvent {
   /// [eventName] - A name describing the type of event. This is used as a primary identifier for the event type.
   /// [eventMessage] - Optional. A message providing additional details about the event. This is typically used for display in logs.
   /// [parameters] - Optional. A map containing additional data that should be logged with the event. This could include any context relevant to the event.
-  ConsoleLogEvent({
-    required super.eventName, 
-    super.eventMessage, 
-    super.parameters
-  });   
+  ConsoleLogEvent(
+      {required super.eventName, super.eventMessage, super.parameters});
 
   /// Converts the [ConsoleLogEvent] to a map, adapting the output specifically for console logging.
   ///
@@ -42,7 +37,7 @@ class ConsoleLogEvent extends LogEvent {
     return {
       'name': eventName,
       'parameters': {
-        'message': eventMessage ?? 'No message provided',  
+        'message': eventMessage ?? 'No message provided',
       },
     };
   }

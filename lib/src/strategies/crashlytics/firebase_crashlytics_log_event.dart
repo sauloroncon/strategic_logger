@@ -1,5 +1,3 @@
-
-
 import 'package:strategic_logger/logger_usage.dart';
 
 /// A subclass of [LogEvent] that encapsulates data specific to Firebase Crashlytics logging.
@@ -8,7 +6,7 @@ import 'package:strategic_logger/logger_usage.dart';
 /// including optional stack trace information. It is tailored to log error messages and their associated
 /// stack traces to Firebase Crashlytics, aiding in debugging and monitoring application health.
 ///
-/// The class is designed to provide a structured format for error reporting, making it easier to 
+/// The class is designed to provide a structured format for error reporting, making it easier to
 /// understand the context and specifics of an error when viewed in the Firebase Crashlytics dashboard.
 ///
 /// Example:
@@ -20,7 +18,7 @@ import 'package:strategic_logger/logger_usage.dart';
 /// );
 /// logger.log('An error event', event: crashlyticsEvent);
 /// ```
-class FirebaseCrashlyticsLogEvent extends LogEvent {  
+class FirebaseCrashlyticsLogEvent extends LogEvent {
   /// An optional stack trace string that provides details about the error's location and state at the time of error.
   ///
   /// This can be very helpful for debugging in production, where reading logs might be the primary way to diagnose issues.
@@ -46,11 +44,11 @@ class FirebaseCrashlyticsLogEvent extends LogEvent {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'name': eventName, 
+      'name': eventName,
       'parameters': {
         'error': eventMessage,
         'stackTrace': stackTrace,
       },
     };
-  }  
+  }
 }

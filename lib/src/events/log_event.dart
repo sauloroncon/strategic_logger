@@ -23,7 +23,7 @@ class LogEvent {
   /// A map of key-value pairs containing additional parameters that provide more context to the event.
   /// This is useful for passing additional data that may be relevant to specific logs.
   final Map<String, dynamic> parameters;
-  
+
   /// Constructs a [LogEvent] with a mandatory event name, an optional event message, and an optional map of parameters.
   ///
   /// [eventName] - A unique identifier for the type of log event.
@@ -40,10 +40,7 @@ class LogEvent {
   /// This method can be overridden by subclasses to include additional or altered information.
   /// Returns a map representation of the log event, which can be directly used for logging or further processing.
   Map<String, dynamic> toMap() {
-    return {
-      'eventName': eventName,
-      'parameters': parameters
-    };
+    return {'eventName': eventName, 'parameters': parameters};
   }
 
   /// Checks the equality of [LogEvent] instances based on the event name.

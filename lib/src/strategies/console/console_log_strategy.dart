@@ -3,7 +3,6 @@ import 'dart:developer' as developer;
 import 'package:strategic_logger/logger_extension.dart';
 import 'package:strategic_logger/logger_usage.dart';
 
-
 /// A [LogStrategy] implementation that logs messages, errors, and fatal errors to the console.
 ///
 /// This strategy provides a simple way to output log information directly to the console,
@@ -51,7 +50,8 @@ class ConsoleLogStrategy extends LogStrategy {
         );
       }
     } catch (e, stack) {
-      developer.log('Error during logging in ConsoleLogStrategy: $e', name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
+      developer.log('Error during logging in ConsoleLogStrategy: $e',
+          name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
     }
   }
 
@@ -61,7 +61,8 @@ class ConsoleLogStrategy extends LogStrategy {
   /// [stackTrace] - The stack trace associated with the error.
   /// [event] - An optional [LogEvent] providing additional context for the error.
   @override
-  Future<void> error({dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> error(
+      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
     try {
       if (shouldLog(event: event)) {
         developer.log(
@@ -77,7 +78,8 @@ class ConsoleLogStrategy extends LogStrategy {
             stackTrace: stackTrace,
           );
         } else {
-          developer.log('$error', name: 'ConsoleLogStrategy', error: error, stackTrace: stackTrace);
+          developer.log('$error',
+              name: 'ConsoleLogStrategy', error: error, stackTrace: stackTrace);
         }
         developer.log(
           '<<═══════════════════════CONSOLELOG STRATEGY [ERROR]═══════════════════════<<',
@@ -85,7 +87,8 @@ class ConsoleLogStrategy extends LogStrategy {
         );
       }
     } catch (e, stack) {
-      developer.log('Error during error handling in ConsoleLogStrategy: $e', name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
+      developer.log('Error during error handling in ConsoleLogStrategy: $e',
+          name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
     }
   }
 
@@ -97,7 +100,8 @@ class ConsoleLogStrategy extends LogStrategy {
   /// [stackTrace] - The stack trace associated with the critical error.
   /// [event] - An optional [LogEvent] providing additional context for the critical error.
   @override
-  Future<void> fatal({dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> fatal(
+      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
     try {
       if (shouldLog(event: event)) {
         developer.log(
@@ -113,7 +117,8 @@ class ConsoleLogStrategy extends LogStrategy {
             stackTrace: stackTrace,
           );
         } else {
-          developer.log('$error', name: 'ConsoleLogStrategy', error: error, stackTrace: stackTrace);
+          developer.log('$error',
+              name: 'ConsoleLogStrategy', error: error, stackTrace: stackTrace);
         }
         developer.log(
           '<<═══════════════════════CONSOLELOG STRATEGY [FATAL]═══════════════════════<<',
@@ -121,7 +126,11 @@ class ConsoleLogStrategy extends LogStrategy {
         );
       }
     } catch (e, stack) {
-      developer.log('Fatal Error during error handling in ConsoleLogStrategy: $e', name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
+      developer.log(
+          'Fatal Error during error handling in ConsoleLogStrategy: $e',
+          name: 'ConsoleLogStrategy',
+          error: e,
+          stackTrace: stack);
     }
   }
 }

@@ -45,7 +45,7 @@ class StrategicLogger {
   /// [level] - The minimum log level to log. Defaults to [LogLevel.none].
   Future<void> reconfigure({
     List<LogStrategy>? strategies,
-    LogLevel level = LogLevel.none,    
+    LogLevel level = LogLevel.none,
   }) async {
     logger._initialize(strategies: strategies, level: level, force: true);
   }
@@ -58,9 +58,9 @@ class StrategicLogger {
   /// [level] - The minimum log level to log. Defaults to [LogLevel.none].
   Future<void> initialize({
     List<LogStrategy>? strategies,
-    LogLevel level = LogLevel.none,    
+    LogLevel level = LogLevel.none,
   }) async {
-    logger._initialize(strategies: strategies, level: level);    
+    logger._initialize(strategies: strategies, level: level);
   }
 
   /// Initializes or reinitializes the logger with specified strategies and log level.
@@ -74,7 +74,7 @@ class StrategicLogger {
     List<LogStrategy>? strategies,
     LogLevel level = LogLevel.none,
     bool force = false,
-  }) async {    
+  }) async {
     if (_isInitialized && !force) {
       throw AlreadyInitializedError();
     } else {
@@ -122,7 +122,8 @@ class StrategicLogger {
   /// [error] - The error object to log.
   /// [stackTrace] - The stack trace associated with the error.
   /// [event] - Optional. The specific log event associated with the error.
-  Future<void> error(dynamic error, {StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> error(dynamic error,
+      {StackTrace? stackTrace, LogEvent? event}) async {
     if (!_isInitialized) {
       throw NotInitializedError();
     }
@@ -138,26 +139,30 @@ class StrategicLogger {
   /// [error] - The critical error object to log as fatal.
   /// [stackTrace] - The stack trace associated with the fatal error.
   /// [event] - Optional. The specific log event associated with the fatal error.
-  Future<void> fatal(dynamic error, {StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> fatal(dynamic error,
+      {StackTrace? stackTrace, LogEvent? event}) async {
     if (!_isInitialized) {
       throw NotInitializedError();
     }
     for (var strategy in logger._strategies) {
       await strategy.fatal(error: error, stackTrace: stackTrace, event: event);
     }
-  }  
+  }
 
   /// Prints initialization details of the logger, including whether it was a reconfiguration.
   void _printStrategicLoggerInit() {
-    String strategiesFormatted = _strategies.map((s) => '    - ${s.toString()}').join('\n');
+    String strategiesFormatted =
+        _strategies.map((s) => '    - ${s.toString()}').join('\n');
 
     String logMessage = [
-        '══════════════════════════════ STRATEGIC LOGGER CONFIG ══════════════════════════════',
-        _isInitialized ? '  ═══════════════════════════ !!RECONFIGURE WARNING!! ═══════════════════════════' : '',
-        "  Strategies:",
-        strategiesFormatted,
-        "  InitLogLevel: $_initLogLevel",
-        '═════════════════════════════════════════════════════════════════════════════════════',
+      '══════════════════════════════ STRATEGIC LOGGER CONFIG ══════════════════════════════',
+      _isInitialized
+          ? '  ═══════════════════════════ !!RECONFIGURE WARNING!! ═══════════════════════════'
+          : '',
+      "  Strategies:",
+      strategiesFormatted,
+      "  InitLogLevel: $_initLogLevel",
+      '═════════════════════════════════════════════════════════════════════════════════════',
     ].join('\n');
 
     developer.log(logMessage, name: 'StrategicLogger');

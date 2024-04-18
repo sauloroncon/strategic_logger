@@ -1,5 +1,3 @@
-
-
 import 'package:strategic_logger/logger_usage.dart';
 
 /// A subclass of [LogEvent] designed for integration with Firebase Analytics.
@@ -23,11 +21,8 @@ class FirebaseAnalyticsLogEvent extends LogEvent {
   /// [eventName] - A name identifying the event. This is used as the primary identifier for the event type in Firebase Analytics.
   /// [eventMessage] - Optional. A message providing additional details about the event, used for context or further description.
   /// [parameters] - Optional. A map containing additional data that should be logged with the event. This can include any key-value pairs that Firebase Analytics supports.
-  FirebaseAnalyticsLogEvent({
-    required super.eventName,
-    super.eventMessage,
-    super.parameters
-  });
+  FirebaseAnalyticsLogEvent(
+      {required super.eventName, super.eventMessage, super.parameters});
 
   /// Converts the [FirebaseAnalyticsLogEvent] to a map, suitable for submission to Firebase Analytics.
   ///

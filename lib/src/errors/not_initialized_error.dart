@@ -1,7 +1,7 @@
 /// An error indicating that an attempt was made to use an object that has not yet been initialized.
 ///
-/// This error is thrown in scenarios where certain methods or properties of an object are accessed 
-/// before the object has gone through its necessary initialization process. This ensures that 
+/// This error is thrown in scenarios where certain methods or properties of an object are accessed
+/// before the object has gone through its necessary initialization process. This ensures that
 /// all components are properly set up before use, preventing runtime failures due to uninitialized state.
 ///
 /// Example usage:

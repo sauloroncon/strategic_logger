@@ -32,8 +32,8 @@ enum LogLevel {
   ///
   /// [name] - The name of the log level to convert.
   /// Returns the [LogLevel] value matching the name.
-  static LogLevel converter(String name) =>
-      LogLevel.values.firstWhere((logLevel) => logLevel.name == name, orElse: () {
+  static LogLevel converter(String name) => LogLevel.values
+          .firstWhere((logLevel) => logLevel.name == name, orElse: () {
         throw StateError('Invalid log level name: $name');
       });
 }
