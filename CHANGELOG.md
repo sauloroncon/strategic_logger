@@ -1,3 +1,7 @@
+# 0.1.7
+
+Crashlytics import correction
+
 # 0.1.6
 
 Sentry Strategy dartdoc updated
