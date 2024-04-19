@@ -1,3 +1,7 @@
+# 0.1.8
+
+Firebase Analytics & Crashlytics export correction
+
 # 0.1.7
 
 Crashlytics import correction
