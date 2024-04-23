@@ -35,10 +35,9 @@ class ConsoleLogStrategy extends LogStrategy {
           '>>═══════════════════════CONSOLELOG STRATEGY [LOG]═══════════════════════>>',
           name: 'ConsoleLogStrategy',
         );
-        if (event != null) {
-          final ConsoleLogEvent consoleEvent = event as ConsoleLogEvent;
+        if (event != null && event is ConsoleLogEvent) {
           developer.log(
-            'eventName: ${consoleEvent.eventName} eventMessage: ${consoleEvent.eventMessage ?? "No message"} message: $message',
+            'eventName: ${event.eventName} eventMessage: ${event.eventMessage ?? "No message"} message: $message',
             name: 'ConsoleLogStrategy',
           );
         } else {

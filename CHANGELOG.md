@@ -1,3 +1,6 @@
+# 0.1.9
+
+Firebase Analytics & Crashlytics just log your own events
 # 0.1.8
 
 Firebase Analytics & Crashlytics export correction

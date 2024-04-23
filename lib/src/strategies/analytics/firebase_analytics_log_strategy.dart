@@ -50,10 +50,6 @@ class FirebaseAnalyticsLogStrategy extends LogStrategy {
             name: analyticsEvent.eventName,
             parameters: analyticsEvent.parameters,
           );
-        } else {
-          _analytics.logEvent(
-            name: message,
-          );
         }
       }
     } catch (e, stack) {

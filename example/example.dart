@@ -57,7 +57,7 @@ void main() {
   // To send more structured logs, we can send a LogEvent (all strategies will be called).
   logger.log(
     'purchase completed',
-    event: LogEvent(
+    event: ConsoleLogEvent(
         eventName: 'PURCHASE_COMPLETED',
         parameters: {'key': 'value', 'key2': 'value'}),
   );

@@ -46,9 +46,11 @@ class FirebaseCrashlyticsLogStrategy extends LogStrategy {
           'Logging to Firebase Crashlytics',
           name: 'FirebaseCrashlyticsLogStrategy',
         );
-        if (event != null && event is FirebaseCrashlyticsLogEvent) {
-          FirebaseCrashlytics.instance
-              .log('${event.eventName}: ${event.eventMessage}');
+        if (event != null) {
+          if (event is FirebaseCrashlyticsLogEvent) {
+            FirebaseCrashlytics.instance
+                .log('${event.eventName}: ${event.eventMessage}');
+          }
         } else {
           FirebaseCrashlytics.instance.log('Message: $message');
         }
