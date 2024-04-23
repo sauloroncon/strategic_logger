@@ -1,8 +1,4 @@
 import 'package:strategic_logger/logger.dart';
-import 'package:strategic_logger/src/strategies/analytics/firebase_analytics_log_event.dart';
-import 'package:strategic_logger/src/strategies/analytics/firebase_analytics_log_strategy.dart';
-import 'package:strategic_logger/src/strategies/crashlytics/firebase_crashlytics_log_event.dart';
-import 'package:strategic_logger/src/strategies/crashlytics/firebase_crashlytics_log_strategy.dart';
 import 'package:test/test.dart';
 
 /// Test suite for the Strategic Logger to ensure correct functionality across various scenarios.

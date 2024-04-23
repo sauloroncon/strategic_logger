@@ -1,14 +1,15 @@
-Strategic Logger - Log Smart, Not Hard – One Call Logs All!
+Strategic Logger - One Call Logs All!
 ================
 
-Strategic Logger is a versatile logging framework designed to support multiple logging strategies, including console logging, Firebase Analytics, and Firebase Crashlytics. It's built to be flexible and easy to extend, making it ideal for applications of any size that need reliable logging mechanisms. 
+Easy to use and extensible logger designed to support multiple logging strategies, like Firebase Crashlytics, Sentry, Firebase Analytics, and other that you want. 
 
-<a href="https://www.buymeacoffee.com/sauloroncon" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="width: 170px; height: auto;"></a>
+Show some ❤️ and star the repo to support the project
+
 
 Features
 --------
 
-*   **Multiple Log Strategies**: Easily integrate with different logging services like Firebase Analytics and Firebase Crashlytics.
+*   **Multiple & Built-in Log Strategies**: Firebase Crashlytics, Sentry, Firebase Analytics, ConsoleLog already implemented. (See examples tab) 
     
 *   **Customizable**: Extendable to include custom logging strategies depending on your application needs.
     
@@ -22,7 +23,7 @@ Getting Started
 
 To get started with Strategic Logger, add it to your project as a dependency:
 
-dependencies:strategic\_logger: ^1.0.0
+dependencies:strategic\_logger: ^0.1.10
 
 ### Initialization
 
@@ -44,7 +45,7 @@ void main() {
 ```
 ### Usage
 
-Logging messages is straightforward:
+Logging messages is straightforward: (Easy and clean-code)
 
 ```dart
 logger.log('This is an info log');
@@ -63,9 +64,9 @@ logger.log('User logged in', event: LogEvent(eventName: 'user\_login'));
 Documentation
 -------------
 
-For full documentation, including all configuration options and advanced usage examples, visit \[Documentation Link\].
+For full documentation, including all configuration options and advanced usage examples, see examples tab.
 
-Extending the Logger
+Extending the Logger (Your Custom Strategy)
 --------------------
 
 To add a custom log strategy, extend the LogStrategy class:
@@ -86,22 +87,10 @@ Contributing
 ------------
 
 Contributions are welcome! Please read the contributing guide on our GitHub repository to get started.
+<a href="https://www.buymeacoffee.com/sauloroncon" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="width: 150px; height: auto;"></a>
 
 License
 -------
 
 Strategic Logger is released under the MIT License.
 
-Notes for Enhancement
----------------------
-
-*   **Examples**: Include more detailed examples that showcase complex scenarios or integration with other systems.
-    
-*   **Advanced Configuration**: If your logger supports dynamic levels or filters, document how to configure these.
-    
-*   **Community and Support**: Mention how users can ask questions, report issues, or contribute to the documentation.
-    
-*   **Versioning and Updates**: Provide information on how the project handles new versions and backward compatibility.
-    
-
-By ensuring that your README.md is clear, informative, and comprehensive, you enhance the usability of your package and help ensure it meets the quality standards expected by the Dart and Flutter community on pub.dev.
