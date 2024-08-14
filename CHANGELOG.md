@@ -1,3 +1,9 @@
+# 0.1.12
+
+Updating dependencies versions 
+# 0.1.11
+
+Updating dependencies versions 
 # 0.1.10
 
 README improvments

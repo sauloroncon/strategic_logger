@@ -22,7 +22,7 @@ class LogEvent {
 
   /// A map of key-value pairs containing additional parameters that provide more context to the event.
   /// This is useful for passing additional data that may be relevant to specific logs.
-  final Map<String, dynamic> parameters;
+  final Map<String, Object>? parameters;
 
   /// Constructs a [LogEvent] with a mandatory event name, an optional event message, and an optional map of parameters.
   ///
