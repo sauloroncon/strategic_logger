@@ -40,7 +40,7 @@ class FirebaseAnalyticsLogStrategy extends LogStrategy {
     try {
       if (shouldLog(event: event)) {
         developer.log(
-          '>>═══════════════════════FIREBASE ANALYTICS LOG STRATEGY [LOG]═══════════════════════<<',
+          '>>═══════════════════════FIREBASE ANALYTICS LOG STRATEGY [INFO/LOG]═══════════════════════<<',
           name: 'FirebaseAnalyticsLogStrategy',
         );
         if (event != null) {
@@ -52,6 +52,24 @@ class FirebaseAnalyticsLogStrategy extends LogStrategy {
           );
         }
       }
+    } catch (e, stack) {
+      developer.log(
+        'Error during Firebase Analytics logging: $e',
+        name: 'FirebaseAnalyticsLogStrategy',
+        error: e,
+        stackTrace: stack,
+      );
+    }
+  }
+
+  /// Logs a message or a structured event to Firebase Analytics, facilitating broad and detailed analytics.
+  ///
+  /// [message] - The general message to log if no specific event is provided. Treated as the event name in Firebase.
+  /// [event] - An optional [LogEvent] providing structured data for logging, allowing for more granified event analysis.
+  @override
+  Future<void> info({dynamic message, LogEvent? event}) async {
+    try {
+      log(message: message, event: event);
     } catch (e, stack) {
       developer.log(
         'Error during Firebase Analytics logging: $e',

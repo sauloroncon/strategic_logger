@@ -49,6 +49,12 @@ abstract class LogStrategy {
   /// [event] - Optional. The specific log event associated with the message.
   Future<void> log({dynamic message, LogEvent? event});
 
+  /// Abstract method to info a message or event (same as log()).
+  ///
+  /// [message] - The message or data to log.
+  /// [event] - Optional. The specific log event associated with the message.
+  Future<void> info({dynamic message, LogEvent? event});
+
   /// Abstract method to log an error.
   ///
   /// [error] - The error object to log.

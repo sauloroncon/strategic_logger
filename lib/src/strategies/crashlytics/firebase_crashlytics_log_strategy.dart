@@ -65,6 +65,27 @@ class FirebaseCrashlyticsLogStrategy extends LogStrategy {
     }
   }
 
+  /// Logs a message or a structured event to Firebase Crashlytics.
+  ///
+  /// If an event is provided, the log will include structured data tailored for Firebase Crashlytics.
+  /// Otherwise, it logs a general message.
+  ///
+  /// [message] - a general message to log if no event is provided.
+  /// [event] - an optional [LogEvent] providing structured data for logging.
+  @override
+  Future<void> info({dynamic message, LogEvent? event}) async {
+    try {
+      log(message: message, event: event);
+    } catch (e, stack) {
+      developer.log(
+        'Error during logging in Firebase Crashlytics Strategy',
+        name: 'FirebaseCrashlyticsLogStrategy',
+        error: e,
+        stackTrace: stack,
+      );
+    }
+  }
+
   /// Records an error or a structured event with an error to Firebase Crashlytics.
   ///
   /// Errors are logged with their associated stack traces. If an event is provided,

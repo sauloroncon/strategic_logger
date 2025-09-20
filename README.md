@@ -23,7 +23,7 @@ Getting Started
 
 To get started with Strategic Logger, add it to your project as a dependency:
 
-dependencies:strategic\_logger: ^0.1.10
+dependencies:strategic\_logger: ^0.2.0
 
 ### Initialization
 
@@ -49,6 +49,7 @@ Logging messages is straightforward: (Easy and clean-code)
 
 ```dart
 logger.log('This is an info log');
+logger.info('This is an info log too');
 logger.error('This is an error message');
 logger.fatal('This is a fatal error');
 ```

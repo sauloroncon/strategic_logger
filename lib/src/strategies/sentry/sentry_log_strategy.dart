@@ -61,6 +61,27 @@ class SentryLogStrategy extends LogStrategy {
     }
   }
 
+  /// Logs a message or a structured event to Sentry.
+  ///
+  /// If an event is provided, the log will include structured data tailored for Sentry.
+  /// Otherwise, it logs a general message.
+  ///
+  /// [message] - a general message to log if no event is provided.
+  /// [event] - an optional [LogEvent] providing structured data for logging.
+  @override
+  Future<void> info({dynamic message, LogEvent? event}) async {
+    try {
+      log(message: message, event: event);
+    } catch (e, stack) {
+      developer.log(
+        'Error during logging in Sentry Strategy',
+        name: 'SentryLogStrategy',
+        error: e,
+        stackTrace: stack,
+      );
+    }
+  }
+
   /// Records an error or a structured event with an error to Sentry.
   ///
   /// Errors are logged with their associated stack traces. If an event is provided,

@@ -1,3 +1,7 @@
+# 0.2.0
+
+Updating sdk and dependencies versions
+
 # 0.1.12
 
 Updating dependencies versions 

@@ -115,6 +115,16 @@ class StrategicLogger {
     }
   }
 
+  /// Logs a message or event using the configured strategies.
+  ///
+  /// Throws [NotInitializedError] if the logger has not been initialized.
+  ///
+  /// [message] - The message to log.
+  /// [event] - Optional. The specific log event associated with the message.
+  Future<void> info(dynamic message, {LogEvent? event}) async {
+    await log(message, event: event);
+  }
+
   /// Logs an error using the configured strategies.
   ///
   /// Throws [NotInitializedError] if the logger has not been initialized.

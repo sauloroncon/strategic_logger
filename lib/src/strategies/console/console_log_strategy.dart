@@ -54,6 +54,20 @@ class ConsoleLogStrategy extends LogStrategy {
     }
   }
 
+  /// Logs a message or a structured event to the console.
+  ///
+  /// [message] - The message or data to log if no specific event is provided.
+  /// [event] - An optional [LogEvent] providing structured data for logging.
+  @override
+  Future<void> info({dynamic message, LogEvent? event}) async {
+    try {
+      log(message: message, event: event);
+    } catch (e, stack) {
+      developer.log('Error during logging in ConsoleLogStrategy: $e',
+          name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
+    }
+  }
+
   /// Logs an error or a structured event with an error to the console.
   ///
   /// [error] - The error to log.
