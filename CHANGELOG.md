@@ -1,3 +1,19 @@
+# 1.1.1
+
+## 🐛 Bug Fixes - Strategic Logger 1.1.1
+
+### 🐛 Bug Fixes
+- **Integration Test Fixes**: Fixed `LateInitializationError` type recognition in integration tests
+- **Test Stability**: Improved test reliability and error handling
+- **Error Assertion Updates**: Updated error assertions to use string-based checks for better compatibility
+
+### 🧪 Testing Improvements
+- **Integration Test Reliability**: Enhanced integration test stability and error handling
+- **Test Coverage**: Maintained test coverage above 80% with improved test quality
+- **Error Handling Tests**: Better error handling validation in test scenarios
+
+---
+
 # 1.1.0
 
 ## 🚀 Major Release - Strategic Logger 1.1.0
