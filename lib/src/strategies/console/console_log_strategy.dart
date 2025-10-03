@@ -1,14 +1,23 @@
 import 'dart:developer' as developer;
 
-import 'package:strategic_logger/logger_extension.dart';
-import 'package:strategic_logger/logger.dart';
+import '../../console/modern_console_formatter.dart';
+import '../../core/isolate_manager.dart';
+import '../../enums/log_level.dart';
+import '../../events/log_event.dart';
+import '../log_strategy.dart';
 
 /// A [LogStrategy] implementation that logs messages, errors, and fatal errors to the console.
 ///
-/// This strategy provides a simple way to output log information directly to the console,
+/// This strategy provides a modern way to output log information directly to the console,
 /// suitable for development and troubleshooting purposes. It supports distinguishing between
 /// general log messages, errors, and fatal errors, and can handle structured [LogEvent] instances
 /// if provided.
+///
+/// Features:
+/// - Modern console formatting with colors and emojis
+/// - Isolate-based processing for heavy operations
+/// - Performance monitoring
+/// - Structured output with context and events
 ///
 /// Example:
 /// ```dart
@@ -17,11 +26,34 @@ import 'package:strategic_logger/logger.dart';
 /// logger.log("A simple log message.");
 /// ```
 class ConsoleLogStrategy extends LogStrategy {
+  final bool _useModernFormatting;
+  final bool _useColors;
+  final bool _useEmojis;
+  final bool _showTimestamp;
+  final bool _showContext;
+
   /// Constructs a [ConsoleLogStrategy].
   ///
   /// [logLevel] sets the log level at which this strategy becomes active.
   /// [supportedEvents] optionally specifies which types of [LogEvent] this strategy should handle.
-  ConsoleLogStrategy({super.logLevel = LogLevel.none, super.supportedEvents});
+  /// [useModernFormatting] enables modern console formatting with colors and emojis.
+  /// [useColors] enables colored output.
+  /// [useEmojis] enables emoji indicators for log levels.
+  /// [showTimestamp] shows timestamp in logs.
+  /// [showContext] shows context information in logs.
+  ConsoleLogStrategy({
+    super.logLevel = LogLevel.none,
+    super.supportedEvents,
+    bool useModernFormatting = true,
+    bool useColors = true,
+    bool useEmojis = true,
+    bool showTimestamp = true,
+    bool showContext = true,
+  }) : _useModernFormatting = useModernFormatting,
+       _useColors = useColors,
+       _useEmojis = useEmojis,
+       _showTimestamp = showTimestamp,
+       _showContext = showContext;
 
   /// Logs a message or a structured event to the console.
   ///
@@ -29,29 +61,7 @@ class ConsoleLogStrategy extends LogStrategy {
   /// [event] - An optional [LogEvent] providing structured data for logging.
   @override
   Future<void> log({dynamic message, LogEvent? event}) async {
-    try {
-      if (shouldLog(event: event)) {
-        developer.log(
-          '>>═══════════════════════CONSOLELOG STRATEGY [LOG]═══════════════════════>>',
-          name: 'ConsoleLogStrategy',
-        );
-        if (event != null && event is ConsoleLogEvent) {
-          developer.log(
-            'eventName: ${event.eventName} eventMessage: ${event.eventMessage ?? "No message"} message: $message',
-            name: 'ConsoleLogStrategy',
-          );
-        } else {
-          developer.log('$message', name: 'ConsoleLogStrategy');
-        }
-        developer.log(
-          '<<═══════════════════════CONSOLELOG STRATEGY [LOG]═══════════════════════<<',
-          name: 'ConsoleLogStrategy',
-        );
-      }
-    } catch (e, stack) {
-      developer.log('Error during logging in ConsoleLogStrategy: $e',
-          name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
-    }
+    await _logMessage(LogLevel.info, message, event: event);
   }
 
   /// Logs a message or a structured event to the console.
@@ -60,12 +70,7 @@ class ConsoleLogStrategy extends LogStrategy {
   /// [event] - An optional [LogEvent] providing structured data for logging.
   @override
   Future<void> info({dynamic message, LogEvent? event}) async {
-    try {
-      log(message: message, event: event);
-    } catch (e, stack) {
-      developer.log('Error during logging in ConsoleLogStrategy: $e',
-          name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
-    }
+    await _logMessage(LogLevel.info, message, event: event);
   }
 
   /// Logs an error or a structured event with an error to the console.
@@ -74,35 +79,17 @@ class ConsoleLogStrategy extends LogStrategy {
   /// [stackTrace] - The stack trace associated with the error.
   /// [event] - An optional [LogEvent] providing additional context for the error.
   @override
-  Future<void> error(
-      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
-    try {
-      if (shouldLog(event: event)) {
-        developer.log(
-          '>>═══════════════════════CONSOLELOG STRATEGY [ERROR]═══════════════════════>>',
-          name: 'ConsoleLogStrategy',
-        );
-        if (event != null) {
-          final ConsoleLogEvent consoleEvent = event as ConsoleLogEvent;
-          developer.log(
-            'eventName: ${consoleEvent.eventName} eventMessage: ${consoleEvent.eventMessage ?? "No message"} error: $error',
-            name: 'ConsoleLogStrategy',
-            error: error,
-            stackTrace: stackTrace,
-          );
-        } else {
-          developer.log('$error',
-              name: 'ConsoleLogStrategy', error: error, stackTrace: stackTrace);
-        }
-        developer.log(
-          '<<═══════════════════════CONSOLELOG STRATEGY [ERROR]═══════════════════════<<',
-          name: 'ConsoleLogStrategy',
-        );
-      }
-    } catch (e, stack) {
-      developer.log('Error during error handling in ConsoleLogStrategy: $e',
-          name: 'ConsoleLogStrategy', error: e, stackTrace: stack);
-    }
+  Future<void> error({
+    dynamic error,
+    StackTrace? stackTrace,
+    LogEvent? event,
+  }) async {
+    await _logMessage(
+      LogLevel.error,
+      error,
+      event: event,
+      stackTrace: stackTrace,
+    );
   }
 
   /// Marks an error as fatal and records it to the console.
@@ -113,37 +100,112 @@ class ConsoleLogStrategy extends LogStrategy {
   /// [stackTrace] - The stack trace associated with the critical error.
   /// [event] - An optional [LogEvent] providing additional context for the critical error.
   @override
-  Future<void> fatal(
-      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> fatal({
+    dynamic error,
+    StackTrace? stackTrace,
+    LogEvent? event,
+  }) async {
+    await _logMessage(
+      LogLevel.fatal,
+      error,
+      event: event,
+      stackTrace: stackTrace,
+    );
+  }
+
+  /// Internal method to log messages with modern formatting
+  Future<void> _logMessage(
+    LogLevel level,
+    dynamic message, {
+    LogEvent? event,
+    StackTrace? stackTrace,
+  }) async {
     try {
-      if (shouldLog(event: event)) {
-        developer.log(
-          '>>═══════════════════════CONSOLELOG STRATEGY [FATAL]═══════════════════════>>',
-          name: 'ConsoleLogStrategy',
-        );
-        if (event != null) {
-          final ConsoleLogEvent consoleEvent = event as ConsoleLogEvent;
-          developer.log(
-            'eventName: ${consoleEvent.eventName} eventMessage: ${consoleEvent.eventMessage ?? "No message"} error: $error',
-            name: 'ConsoleLogStrategy',
-            error: error,
-            stackTrace: stackTrace,
+      if (!shouldLog(event: event)) return;
+
+      String formattedMessage;
+
+      if (_useModernFormatting) {
+        // Use isolate for heavy formatting if available
+        try {
+          final formatted = await isolateManager.formatLog(
+            message: message.toString(),
+            level: level.name,
+            timestamp: DateTime.now(),
+            context: event?.parameters,
           );
-        } else {
-          developer.log('$error',
-              name: 'ConsoleLogStrategy', error: error, stackTrace: stackTrace);
+          formattedMessage = formatted['formatted'] as String;
+        } catch (e) {
+          // Fallback to direct formatting
+          formattedMessage = modernConsoleFormatter.formatLog(
+            level: level,
+            message: message.toString(),
+            timestamp: DateTime.now(),
+            event: event,
+            stackTrace: stackTrace,
+            useColors: _useColors,
+            useEmojis: _useEmojis,
+            showTimestamp: _showTimestamp,
+            showContext: _showContext,
+          );
         }
-        developer.log(
-          '<<═══════════════════════CONSOLELOG STRATEGY [FATAL]═══════════════════════<<',
-          name: 'ConsoleLogStrategy',
+      } else {
+        // Legacy formatting
+        formattedMessage = _formatLegacyMessage(
+          level,
+          message,
+          event,
+          stackTrace,
         );
       }
+
+      developer.log(
+        formattedMessage,
+        name: 'ConsoleLogStrategy',
+        error: level == LogLevel.error || level == LogLevel.fatal
+            ? message
+            : null,
+        stackTrace: stackTrace,
+      );
     } catch (e, stack) {
       developer.log(
-          'Fatal Error during error handling in ConsoleLogStrategy: $e',
-          name: 'ConsoleLogStrategy',
-          error: e,
-          stackTrace: stack);
+        'Error during logging in ConsoleLogStrategy: $e',
+        name: 'ConsoleLogStrategy',
+        error: e,
+        stackTrace: stack,
+      );
     }
+  }
+
+  /// Legacy message formatting for backward compatibility
+  String _formatLegacyMessage(
+    LogLevel level,
+    dynamic message,
+    LogEvent? event,
+    StackTrace? stackTrace,
+  ) {
+    final buffer = StringBuffer();
+
+    buffer.writeln(
+      '>>═══════════════════════CONSOLELOG STRATEGY [${level.name.toUpperCase()}]═══════════════════════>>',
+    );
+
+    if (event != null) {
+      buffer.writeln(
+        'eventName: ${event.eventName} eventMessage: ${event.eventMessage ?? "No message"} message: $message',
+      );
+    } else {
+      buffer.writeln('$message');
+    }
+
+    if (stackTrace != null) {
+      buffer.writeln('Stack Trace: $stackTrace');
+    }
+
+    buffer.writeln(
+      '<<═══════════════════════CONSOLELOG STRATEGY [${level.name.toUpperCase()}]═══════════════════════<<',
+    );
+
+    return buffer.toString();
   }
 }

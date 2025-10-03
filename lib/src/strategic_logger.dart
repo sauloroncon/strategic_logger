@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'dart:developer' as developer;
 
+import 'core/isolate_manager.dart';
+import 'core/log_queue.dart';
+import 'core/performance_monitor.dart';
 import 'enums/log_level.dart';
 
 import 'errors/alread_initialized_error.dart';
@@ -16,6 +20,13 @@ import 'strategies/log_strategy.dart';
 /// The logger must be initialized before use, with the desired log level and strategies provided.
 /// After initialization, the logger can be reconfigured, but this should be used with caution to
 /// avoid unintended side effects during the application lifecycle.
+///
+/// Features:
+/// - Isolate-based processing for heavy operations
+/// - Performance monitoring and metrics
+/// - Modern console formatting with colors and emojis
+/// - Compatibility with popular logger packages
+/// - Async queue with backpressure control
 ///
 /// Example:
 /// ```dart
@@ -37,17 +48,36 @@ class StrategicLogger {
 
   List<LogStrategy> _strategies = [];
 
+  // Modern features
+  late final LogQueue _logQueue;
+  bool _useIsolates = true;
+  bool _enablePerformanceMonitoring = true;
+  bool _enableModernConsole = true;
+
   /// Reconfigures the logger even if it has been previously initialized.
   ///
   /// This should be used with caution, as reconfiguring a logger that is already in use can lead to inconsistent logging behavior.
   ///
   /// [strategies] - List of new strategies to use for logging.
   /// [level] - The minimum log level to log. Defaults to [LogLevel.none].
+  /// [useIsolates] - Whether to use isolates for heavy operations. Defaults to true.
+  /// [enablePerformanceMonitoring] - Whether to enable performance monitoring. Defaults to true.
+  /// [enableModernConsole] - Whether to enable modern console formatting. Defaults to true.
   Future<void> reconfigure({
     List<LogStrategy>? strategies,
     LogLevel level = LogLevel.none,
+    bool useIsolates = true,
+    bool enablePerformanceMonitoring = true,
+    bool enableModernConsole = true,
   }) async {
-    logger._initialize(strategies: strategies, level: level, force: true);
+    await logger._initialize(
+      strategies: strategies,
+      level: level,
+      force: true,
+      useIsolates: useIsolates,
+      enablePerformanceMonitoring: enablePerformanceMonitoring,
+      enableModernConsole: enableModernConsole,
+    );
   }
 
   /// Configures the logger if it has not been initialized.
@@ -56,11 +86,23 @@ class StrategicLogger {
   ///
   /// [strategies] - List of strategies to use for logging.
   /// [level] - The minimum log level to log. Defaults to [LogLevel.none].
+  /// [useIsolates] - Whether to use isolates for heavy operations. Defaults to true.
+  /// [enablePerformanceMonitoring] - Whether to enable performance monitoring. Defaults to true.
+  /// [enableModernConsole] - Whether to enable modern console formatting. Defaults to true.
   Future<void> initialize({
     List<LogStrategy>? strategies,
     LogLevel level = LogLevel.none,
+    bool useIsolates = true,
+    bool enablePerformanceMonitoring = true,
+    bool enableModernConsole = true,
   }) async {
-    logger._initialize(strategies: strategies, level: level);
+    await logger._initialize(
+      strategies: strategies,
+      level: level,
+      useIsolates: useIsolates,
+      enablePerformanceMonitoring: enablePerformanceMonitoring,
+      enableModernConsole: enableModernConsole,
+    );
   }
 
   /// Initializes or reinitializes the logger with specified strategies and log level.
@@ -70,14 +112,34 @@ class StrategicLogger {
   /// [strategies] - List of strategies to use for logging.
   /// [level] - The minimum log level to log. Defaults to [LogLevel.none].
   /// [force] - Forces reinitialization if set to true.
+  /// [useIsolates] - Whether to use isolates for heavy operations.
+  /// [enablePerformanceMonitoring] - Whether to enable performance monitoring.
+  /// [enableModernConsole] - Whether to enable modern console formatting.
   Future<StrategicLogger> _initialize({
     List<LogStrategy>? strategies,
     LogLevel level = LogLevel.none,
     bool force = false,
+    bool useIsolates = true,
+    bool enablePerformanceMonitoring = true,
+    bool enableModernConsole = true,
   }) async {
     if (_isInitialized && !force) {
       throw AlreadyInitializedError();
     } else {
+      // Initialize modern features
+      _useIsolates = useIsolates;
+      _enablePerformanceMonitoring = enablePerformanceMonitoring;
+      _enableModernConsole = enableModernConsole;
+
+      // Initialize isolate manager if enabled
+      if (_useIsolates) {
+        await isolateManager.initialize();
+      }
+
+      // Initialize log queue
+      _logQueue = LogQueue();
+      _setupLogQueueListener();
+
       _initializeStrategies(strategies, level);
       _printStrategicLoggerInit();
       _isInitialized = true;
@@ -100,18 +162,67 @@ class StrategicLogger {
     }
   }
 
-  /// Logs a message or event using the configured strategies.
-  ///
-  /// Throws [NotInitializedError] if the logger has not been initialized.
-  ///
-  /// [message] - The message to log.
-  /// [event] - Optional. The specific log event associated with the message.
-  Future<void> log(dynamic message, {LogEvent? event}) async {
-    if (!_isInitialized) {
-      throw NotInitializedError();
+  /// Sets up the log queue listener for processing logs
+  void _setupLogQueueListener() {
+    _logQueue.stream.listen((entry) async {
+      await _processLogEntry(entry);
+    });
+  }
+
+  /// Processes a log entry using strategies
+  Future<void> _processLogEntry(LogEntry entry) async {
+    if (_enablePerformanceMonitoring) {
+      await performanceMonitor.measureOperation('processLogEntry', () async {
+        for (var strategy in _strategies) {
+          await _executeStrategy(strategy, entry);
+        }
+      });
+    } else {
+      for (var strategy in _strategies) {
+        await _executeStrategy(strategy, entry);
+      }
     }
-    for (var strategy in logger._strategies) {
-      await strategy.log(message: message, event: event);
+  }
+
+  /// Executes a strategy for a log entry
+  Future<void> _executeStrategy(LogStrategy strategy, LogEntry entry) async {
+    try {
+      switch (entry.level) {
+        case LogLevel.debug:
+          await strategy.log(message: entry.message, event: entry.event);
+          break;
+        case LogLevel.info:
+          await strategy.info(message: entry.message, event: entry.event);
+          break;
+        case LogLevel.warning:
+          await strategy.log(message: entry.message, event: entry.event);
+          break;
+        case LogLevel.error:
+          await strategy.error(
+            error: entry.message,
+            stackTrace: entry.stackTrace,
+            event: entry.event,
+          );
+          break;
+        case LogLevel.fatal:
+          await strategy.fatal(
+            error: entry.message,
+            stackTrace: entry.stackTrace,
+            event: entry.event,
+          );
+          break;
+        case LogLevel.none:
+          // Do nothing
+          break;
+      }
+    } catch (e, stackTrace) {
+      // Log strategy execution error
+      developer.log(
+        'Error executing strategy ${strategy.runtimeType}: $e',
+        name: 'StrategicLogger',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -121,8 +232,50 @@ class StrategicLogger {
   ///
   /// [message] - The message to log.
   /// [event] - Optional. The specific log event associated with the message.
-  Future<void> info(dynamic message, {LogEvent? event}) async {
-    await log(message, event: event);
+  /// [context] - Optional. Additional context data.
+  Future<void> log(
+    dynamic message, {
+    LogEvent? event,
+    Map<String, Object>? context,
+  }) async {
+    if (!_isInitialized) {
+      throw NotInitializedError();
+    }
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.info,
+      event: event,
+      context: context,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Logs a message or event using the configured strategies.
+  ///
+  /// Throws [NotInitializedError] if the logger has not been initialized.
+  ///
+  /// [message] - The message to log.
+  /// [event] - Optional. The specific log event associated with the message.
+  /// [context] - Optional. Additional context data.
+  Future<void> info(
+    dynamic message, {
+    LogEvent? event,
+    Map<String, Object>? context,
+  }) async {
+    if (!_isInitialized) {
+      throw NotInitializedError();
+    }
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.info,
+      event: event,
+      context: context,
+    );
+
+    _logQueue.enqueue(entry);
   }
 
   /// Logs an error using the configured strategies.
@@ -132,14 +285,26 @@ class StrategicLogger {
   /// [error] - The error object to log.
   /// [stackTrace] - The stack trace associated with the error.
   /// [event] - Optional. The specific log event associated with the error.
-  Future<void> error(dynamic error,
-      {StackTrace? stackTrace, LogEvent? event}) async {
+  /// [context] - Optional. Additional context data.
+  Future<void> error(
+    dynamic error, {
+    StackTrace? stackTrace,
+    LogEvent? event,
+    Map<String, Object>? context,
+  }) async {
     if (!_isInitialized) {
       throw NotInitializedError();
     }
-    for (var strategy in logger._strategies) {
-      await strategy.error(error: error, stackTrace: stackTrace, event: event);
-    }
+
+    final entry = LogEntry.fromParams(
+      message: error,
+      level: LogLevel.error,
+      event: event,
+      context: context,
+      stackTrace: stackTrace,
+    );
+
+    _logQueue.enqueue(entry);
   }
 
   /// Logs a fatal error using the configured strategies.
@@ -149,20 +314,206 @@ class StrategicLogger {
   /// [error] - The critical error object to log as fatal.
   /// [stackTrace] - The stack trace associated with the fatal error.
   /// [event] - Optional. The specific log event associated with the fatal error.
-  Future<void> fatal(dynamic error,
-      {StackTrace? stackTrace, LogEvent? event}) async {
+  /// [context] - Optional. Additional context data.
+  Future<void> fatal(
+    dynamic error, {
+    StackTrace? stackTrace,
+    LogEvent? event,
+    Map<String, Object>? context,
+  }) async {
     if (!_isInitialized) {
       throw NotInitializedError();
     }
-    for (var strategy in logger._strategies) {
-      await strategy.fatal(error: error, stackTrace: stackTrace, event: event);
+
+    final entry = LogEntry.fromParams(
+      message: error,
+      level: LogLevel.fatal,
+      event: event,
+      context: context,
+      stackTrace: stackTrace,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Synchronous debug logging (compatibility with popular logger packages)
+  void debugSync(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    if (!_isInitialized) return;
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.debug,
+      stackTrace: stackTrace,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Synchronous info logging (compatibility with popular logger packages)
+  void infoSync(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    if (!_isInitialized) return;
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.info,
+      stackTrace: stackTrace,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Synchronous warning logging (compatibility with popular logger packages)
+  void warningSync(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    if (!_isInitialized) return;
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.warning,
+      stackTrace: stackTrace,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Synchronous error logging (compatibility with popular logger packages)
+  void errorSync(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    if (!_isInitialized) return;
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.error,
+      stackTrace: stackTrace,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Synchronous fatal logging (compatibility with popular logger packages)
+  void fatalSync(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    if (!_isInitialized) return;
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.fatal,
+      stackTrace: stackTrace,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Synchronous verbose logging (alias for debug)
+  void verboseSync(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    debugSync(message, error, stackTrace);
+  }
+
+  /// Synchronous log method (alias for info)
+  void logSync(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    infoSync(message, error, stackTrace);
+  }
+
+  /// Logs a message with structured data
+  Future<void> logStructured(
+    LogLevel level,
+    dynamic message, {
+    Map<String, Object>? data,
+    String? tag,
+    DateTime? timestamp,
+  }) async {
+    if (!_isInitialized) {
+      throw NotInitializedError();
     }
+
+    final event = LogEvent(
+      eventName: tag ?? 'LOG',
+      eventMessage: message.toString(),
+      parameters: data,
+    );
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: level,
+      event: event,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Adds debug level logging
+  Future<void> debug(
+    dynamic message, {
+    LogEvent? event,
+    Map<String, Object>? context,
+  }) async {
+    if (!_isInitialized) {
+      throw NotInitializedError();
+    }
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.debug,
+      event: event,
+      context: context,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Adds warning level logging
+  Future<void> warning(
+    dynamic message, {
+    LogEvent? event,
+    Map<String, Object>? context,
+  }) async {
+    if (!_isInitialized) {
+      throw NotInitializedError();
+    }
+
+    final entry = LogEntry.fromParams(
+      message: message,
+      level: LogLevel.warning,
+      event: event,
+      context: context,
+    );
+
+    _logQueue.enqueue(entry);
+  }
+
+  /// Adds verbose level logging (alias for debug)
+  Future<void> verbose(
+    dynamic message, {
+    LogEvent? event,
+    Map<String, Object>? context,
+  }) async {
+    await debug(message, event: event, context: context);
+  }
+
+  /// Forces flush of all queued logs
+  void flush() {
+    _logQueue.flush();
+  }
+
+  /// Gets performance statistics
+  Map<String, dynamic> getPerformanceStats() {
+    return performanceMonitor.getAllStats().map(
+      (key, value) => MapEntry(key, value.toString()),
+    );
+  }
+
+  /// Disposes the logger and cleans up resources
+  void dispose() {
+    _logQueue.dispose();
+    if (_useIsolates) {
+      isolateManager.dispose();
+    }
+    performanceMonitor.dispose();
+    _isInitialized = false;
   }
 
   /// Prints initialization details of the logger, including whether it was a reconfiguration.
   void _printStrategicLoggerInit() {
-    String strategiesFormatted =
-        _strategies.map((s) => '    - ${s.toString()}').join('\n');
+    String strategiesFormatted = _strategies
+        .map((s) => '    - ${s.toString()}')
+        .join('\n');
 
     String logMessage = [
       '══════════════════════════════ STRATEGIC LOGGER CONFIG ══════════════════════════════',
@@ -172,6 +523,9 @@ class StrategicLogger {
       "  Strategies:",
       strategiesFormatted,
       "  InitLogLevel: $_initLogLevel",
+      "  UseIsolates: $_useIsolates",
+      "  PerformanceMonitoring: $_enablePerformanceMonitoring",
+      "  ModernConsole: $_enableModernConsole",
       '═════════════════════════════════════════════════════════════════════════════════════',
     ].join('\n');
 

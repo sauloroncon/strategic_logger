@@ -1,9 +1,16 @@
-/// Provides a logging framework with built-in strategies for console, Sentry,
+/// Provides a modern, high-performance logging framework with built-in strategies for console, Sentry,
 /// and other analytics integration.
 ///
 /// This library is designed to facilitate easy and structured logging across different platforms
 /// and services, encapsulating complexity within pre-defined strategies. It's suitable for applications
 /// that need robust logging capabilities with minimal setup, including error tracking and performance monitoring.
+///
+/// Features:
+/// - Isolate-based processing for heavy operations
+/// - Performance monitoring and metrics
+/// - Modern console formatting with colors and emojis
+/// - Compatibility with popular logger packages
+/// - Async queue with backpressure control
 library logger;
 
 /// Initializes the logger with default settings. Example usage:
@@ -88,3 +95,23 @@ export 'src/errors/alread_initialized_error.dart';
 /// This exception ensures that the logger is properly set up before use, guarding
 /// against runtime errors due to misconfiguration or sequence errors in initialization.
 export 'src/errors/not_initialized_error.dart';
+
+// Modern features
+/// Compatibility wrapper for popular logger packages
+export 'src/compatibility/logger_sync_compatibility.dart';
+
+/// Modern console formatter with colors and emojis
+export 'src/console/modern_console_formatter.dart';
+
+// New strategies
+/// Strategy for logging messages to Datadog
+export 'src/strategies/datadog/datadog_log_strategy.dart';
+
+/// Log event specifically tailored for Datadog
+export 'src/strategies/datadog/datadog_log_event.dart';
+
+/// Strategy for logging messages to New Relic
+export 'src/strategies/newrelic/newrelic_log_strategy.dart';
+
+/// Log event specifically tailored for New Relic
+export 'src/strategies/newrelic/newrelic_log_event.dart';
