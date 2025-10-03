@@ -115,3 +115,20 @@ export 'src/strategies/newrelic/newrelic_log_strategy.dart';
 
 /// Log event specifically tailored for New Relic
 export 'src/strategies/newrelic/newrelic_log_event.dart';
+
+// MCP & AI Integration (v1.1.0)
+/// Model Context Protocol (MCP) Server for Strategic Logger
+export 'src/mcp/mcp_server.dart';
+
+/// MCP Log Strategy for AI agent integration
+export 'src/mcp/mcp_log_strategy.dart';
+
+/// AI Log Strategy for intelligent log analysis
+export 'src/ai/ai_log_strategy.dart';
+
+// Performance & Optimization (v1.1.0)
+/// Object Pool for efficient memory management
+export 'src/core/object_pool.dart' hide LogEvent;
+
+/// Log Compression for bandwidth optimization
+export 'src/core/log_compression.dart';
