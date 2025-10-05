@@ -20,7 +20,7 @@ void main() async {
       enablePerformanceMonitoring: true,
       enableModernConsole: true,
     );
-    
+
     logger.info('Strategic Logger initialized successfully');
   } catch (e) {
     print('Error initializing logger: $e');

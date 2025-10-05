@@ -22,8 +22,11 @@ class ConsoleLogEvent extends LogEvent {
   /// [eventName] - A name describing the type of event. This is used as a primary identifier for the event type.
   /// [eventMessage] - Optional. A message providing additional details about the event. This is typically used for display in logs.
   /// [parameters] - Optional. A map containing additional data that should be logged with the event. This could include any context relevant to the event.
-  ConsoleLogEvent(
-      {required super.eventName, super.eventMessage, super.parameters});
+  ConsoleLogEvent({
+    required super.eventName,
+    super.eventMessage,
+    super.parameters,
+  });
 
   /// Converts the [ConsoleLogEvent] to a map, adapting the output specifically for console logging.
   ///
@@ -36,9 +39,7 @@ class ConsoleLogEvent extends LogEvent {
   Map<String, dynamic> toMap() {
     return {
       'name': eventName,
-      'parameters': {
-        'message': eventMessage ?? 'No message provided',
-      },
+      'parameters': {'message': eventMessage ?? 'No message provided'},
     };
   }
 }

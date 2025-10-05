@@ -1,4 +1,21 @@
-# Strategic Logger 🚀
+# Strategic Logger
+
+```
+╔═════════════════════════════════════════════════════════════════╗
+║          ___ _____ ___    _ _____ ___ ___ ___ ___               ║
+║         / __|_   _| _ \  /_\_   _| __/ __|_ _/ __|              ║
+║         \__ \ | | |   / / _ \| | | _| (_ || | (__               ║
+║         |___/ |_| |_|_\/_/ \_\_| |___\___|___\___|              ║
+║            / /   / __ \/ ____/ ____/ ____/ __ \                 ║
+║           / /   / / / / / __/ / __/ __/ / /_/ /                 ║
+║          / /___/ /_/ / /_/ / /_/ / /___/ _, _/                  ║
+║         /_____/\____/\____/\____/_____/_/ |_|                   ║
+║                                                                 ║
+║          🚀 Powered by Hypn Tech (hypn.com.br)                  ║
+╚═════════════════════════════════════════════════════════════════╝
+```
+
+<div align="center">
 
 [![Pub Version](https://img.shields.io/pub/v/strategic_logger?style=for-the-badge)](https://pub.dev/packages/strategic_logger)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -7,9 +24,23 @@
 [![MCP](https://img.shields.io/badge/MCP-Enabled-green?style=for-the-badge&logo=openai&logoColor=white)](https://modelcontextprotocol.io/)
 [![AI-Powered](https://img.shields.io/badge/AI-Powered-purple?style=for-the-badge&logo=robot&logoColor=white)](#ai-powered-log-analysis)
 
-> **The future of logging is here: AI-powered, MCP-native, high-performance logging framework**
+**The future of logging is here: AI-powered, MCP-native, high-performance logging framework**
 
-Strategic Logger is the **first logging framework** to integrate **Model Context Protocol (MCP)** and **AI-powered analysis**, combining **multi-strategy logging**, **isolate-based processing**, and **intelligent log insights** to revolutionize how developers handle application logs.
+</div>
+
+---
+
+<div align="center">
+
+## 🏢 Sponsored by Hypn Tech
+
+[![Hypn Tech](https://hypn.com.br/wp-content/uploads/2024/05/marca-hypn-institucional-1536x738.png)](https://hypn.com.br)
+
+**Strategic Logger is proudly sponsored and maintained by [Hypn Tech](https://hypn.com.br)**
+
+*Desenvolva seu app com a Hypn Tech - Soluções completas em desenvolvimento mobile e web*
+
+</div>
 
 ---
 
@@ -71,7 +102,7 @@ void main() async {
   // Initialize once at app startup
   await logger.initialize(
     level: LogLevel.debug,
-    strategies: [
+        strategies: [
       ConsoleLogStrategy(
         useModernFormatting: true,
         useColors: true,
@@ -82,9 +113,9 @@ void main() async {
       // AI Strategy for intelligent analysis
       AILogStrategy(),
       // Traditional strategies
-      FirebaseAnalyticsLogStrategy(),
-      FirebaseCrashlyticsLogStrategy(),
-    ],
+            FirebaseAnalyticsLogStrategy(),
+            FirebaseCrashlyticsLogStrategy(),
+        ],
     useIsolates: true,
     enablePerformanceMonitoring: true,
   );
@@ -213,35 +244,202 @@ The MCP server provides several HTTP endpoints for AI agent integration:
 
 ## 📖 Usage Examples
 
-### Async Logging (Recommended)
+### 🚀 Basic Logging
 
 ```dart
+import 'package:strategic_logger/logger.dart';
+
+// Initialize logger
+await logger.initialize(
+  strategies: [
+    ConsoleLogStrategy(
+      useModernFormatting: true,
+      useColors: true,
+      useEmojis: true,
+    ),
+  ],
+  enablePerformanceMonitoring: true,
+);
+
 // Basic logging
 await logger.debug('Debug message');
 await logger.info('Info message');
 await logger.warning('Warning message');
 await logger.error('Error message');
 await logger.fatal('Fatal error');
+```
 
-// Structured logging with context
+### 🎯 Structured Logging with Context
+
+```dart
+// Rich context logging
 await logger.info('User action', context: {
   'userId': '123',
   'action': 'login',
   'timestamp': DateTime.now().toIso8601String(),
+  'device': 'iPhone 15',
+  'version': '1.2.3',
 });
 
-// Log with events
-await logger.log('User logged in', event: LogEvent(
-  eventName: 'user_login',
-  eventMessage: 'User successfully logged in',
-  parameters: {'userId': '123'},
-));
+// Error with stack trace
+try {
+  // Some risky operation
+  throw Exception('Something went wrong');
+} catch (e, stackTrace) {
+  await logger.error('Operation failed', context: {
+    'operation': 'data_sync',
+    'error': e.toString(),
+  });
+}
 ```
 
-### Sync Logging (Compatibility)
+### 🔥 Multi-Strategy Logging
 
 ```dart
-// Drop-in replacement for popular logger packages
+// Log to multiple destinations simultaneously
+await logger.initialize(
+  strategies: [
+    ConsoleLogStrategy(useModernFormatting: true),
+    SentryLogStrategy(dsn: 'your-sentry-dsn'),
+    FirebaseCrashlyticsLogStrategy(),
+    DatadogLogStrategy(apiKey: 'your-api-key'),
+    MCPLogStrategy(), // AI agent integration
+    AILogStrategy(apiKey: 'your-openai-key'),
+  ],
+);
+
+// One call, multiple destinations
+await logger.error('Critical system failure', context: {
+  'component': 'payment_service',
+  'severity': 'critical',
+});
+```
+
+### 🤖 AI-Powered Log Analysis
+
+```dart
+// Enable AI analysis for intelligent insights
+final aiStrategy = AILogStrategy(
+  apiKey: 'your-openai-api-key',
+  analysisInterval: Duration(minutes: 5),
+);
+
+await logger.initialize(
+  strategies: [aiStrategy],
+);
+
+// AI will automatically analyze patterns and provide insights
+await logger.info('High memory usage detected', context: {
+  'memory_usage': '85%',
+  'threshold': '80%',
+});
+```
+
+### 🔄 Real-time Log Streaming
+
+```dart
+// Listen to real-time log events
+logger.logStream.listen((logEntry) {
+  print('New log: ${logEntry.level} - ${logEntry.message}');
+  
+  // Update UI, send to external systems, etc.
+  updateDashboard(logEntry);
+});
+
+// Logs will automatically appear in the stream
+await logger.info('User performed action');
+```
+
+### 📱 Flutter App Integration
+
+```dart
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeLogger();
+  }
+
+  Future<void> _initializeLogger() async {
+    await logger.initialize(
+      strategies: [
+        ConsoleLogStrategy(useModernFormatting: true),
+        FirebaseCrashlyticsLogStrategy(),
+      ],
+      enablePerformanceMonitoring: true,
+    );
+    
+    logger.info('App initialized successfully');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              await logger.info('Button pressed', context: {
+                'screen': 'home',
+                'timestamp': DateTime.now().toIso8601String(),
+              });
+            },
+            child: Text('Log Action'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+### 🔧 Advanced Configuration
+
+```dart
+// Custom configuration with all features
+await logger.initialize(
+  strategies: [
+    ConsoleLogStrategy(
+      useModernFormatting: true,
+      useColors: true,
+      useEmojis: true,
+      showTimestamp: true,
+      showContext: true,
+    ),
+    SentryLogStrategy(
+      dsn: 'your-sentry-dsn',
+      environment: 'production',
+    ),
+    DatadogLogStrategy(
+      apiKey: 'your-datadog-api-key',
+      site: 'datadoghq.com',
+      service: 'my-flutter-app',
+    ),
+  ],
+  level: LogLevel.info,
+  useIsolates: true, // Enable isolate-based processing
+  enablePerformanceMonitoring: true,
+  enableModernConsole: true,
+);
+
+// Performance monitoring
+final stats = logger.getPerformanceStats();
+print('Logs processed: ${stats['totalLogs']}');
+print('Average processing time: ${stats['avgProcessingTime']}ms');
+
+// Force flush all queued logs
+await logger.flush();
+```
+
+### 🔄 Drop-in Replacement (Compatibility)
+
+```dart
+// 100% compatible with popular logger packages
 logger.debugSync('Debug message');
 logger.infoSync('Info message');
 logger.errorSync('Error message');
@@ -251,16 +449,6 @@ loggerCompatibility.debug('Debug message');
 loggerCompatibility.info('Info message');
 loggerCompatibility.error('Error message');
 ```
-
-### Performance Monitoring
-
-```dart
-// Get performance statistics
-final stats = logger.getPerformanceStats();
-print('Performance Stats: $stats');
-
-// Force flush all queued logs
-logger.flush();
 ```
 
 ### Object Pooling & Memory Optimization
@@ -381,7 +569,7 @@ Create your own logging strategy:
 
 ```dart
 class MyCustomLogStrategy extends LogStrategy {
-  @override
+    @override
   Future<void> log({dynamic message, LogEvent? event}) async {
     // Use isolates for heavy processing
     final result = await isolateManager.executeInIsolate(
@@ -406,7 +594,7 @@ class MyCustomLogStrategy extends LogStrategy {
   @override
   Future<void> fatal({dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
     await log(message: error, event: event);
-  }
+    }
 }
 ```
 

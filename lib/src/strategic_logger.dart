@@ -45,7 +45,7 @@ class StrategicLogger {
   bool get isInitialized => _isInitialized;
 
   /// Determines if isolates are supported on the current platform.
-  /// 
+  ///
   /// Returns false for web platform and true for all other platforms.
   bool _isIsolateSupported() {
     if (kIsWeb) {
@@ -66,6 +66,12 @@ class StrategicLogger {
   bool _useIsolates = true;
   bool _enablePerformanceMonitoring = true;
   bool _enableModernConsole = true;
+
+  /// Stream controller for real-time log updates
+  final _logStreamController = StreamController<LogEntry>.broadcast();
+
+  /// Stream of log entries for real-time console updates
+  Stream<LogEntry> get logStream => _logStreamController.stream;
 
   /// Reconfigures the logger even if it has been previously initialized.
   ///
@@ -111,7 +117,7 @@ class StrategicLogger {
   }) async {
     // Auto-detect platform support for isolates
     final shouldUseIsolates = useIsolates ?? _isIsolateSupported();
-    
+
     await logger._initialize(
       strategies: strategies,
       level: level,
@@ -187,6 +193,9 @@ class StrategicLogger {
 
   /// Processes a log entry using strategies
   Future<void> _processLogEntry(LogEntry entry) async {
+    // Emit to stream for real-time console updates
+    _logStreamController.add(entry);
+
     if (_enablePerformanceMonitoring) {
       await performanceMonitor.measureOperation('processLogEntry', () async {
         for (var strategy in _strategies) {
@@ -522,16 +531,24 @@ class StrategicLogger {
       isolateManager.dispose();
     }
     performanceMonitor.dispose();
+    _logStreamController.close();
     _isInitialized = false;
   }
 
   /// Prints initialization details of the logger, including whether it was a reconfiguration.
   void _printStrategicLoggerInit() {
+    final appName = _getAppName();
+
+    // ASCII Art Banner
+    final asciiArt = _generateAsciiArt(appName);
+
     String strategiesFormatted = _strategies
         .map((s) => '    - ${s.toString()}')
         .join('\n');
 
     String logMessage = [
+      asciiArt,
+      '',
       '══════════════════════════════ STRATEGIC LOGGER CONFIG ══════════════════════════════',
       _isInitialized
           ? '  ═══════════════════════════ !!RECONFIGURE WARNING!! ═══════════════════════════'
@@ -545,6 +562,59 @@ class StrategicLogger {
       '═════════════════════════════════════════════════════════════════════════════════════',
     ].join('\n');
 
+    // Log to console (terminal)
+    print(logMessage);
+
+    // Also log to DevTools
     developer.log(logMessage, name: 'StrategicLogger');
+
+    // Also emit to stream for Live Console
+    final initLogEntry = LogEntry(
+      level: LogLevel.info,
+      message: logMessage,
+      timestamp: DateTime.now(),
+    );
+    _logStreamController.add(initLogEntry);
+  }
+
+  /// Generates ASCII art banner for the logger initialization
+  String _generateAsciiArt(String appName) {
+    return '''
+╔══════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                      ║
+║    ███████╗████████╗██████╗  █████╗ ████████╗███████╗ ██████╗ ██╗  ██╗██╗              ║
+║    ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝██╔════╝██╔════╝ ██║  ██║██║              ║
+║    ███████╗   ██║   ██████╔╝███████║   ██║   █████╗  ██║     ███████║██║              ║
+║    ╚════██║   ██║   ██╔══██╗██╔══██║   ██║   ██╔══╝  ██║     ██╔══██║██║              ║
+║    ███████║   ██║   ██║  ██║██║  ██║   ██║   ███████╗╚██████╗██║  ██║███████╗             ║
+║    ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝╚══════╝             ║
+║                                                                                      ║
+║    ██╗      ██████╗  ██████╗  ██████╗ ███████╗██████╗                                  ║
+║    ██║     ██╔═══██╗██╔════╝ ██╔════╝ ██╔════╝██╔══██╗                                 ║
+║    ██║     ██║   ██║██║  ███╗██║  ███╗█████╗  ██████╔╝                                 ║
+║    ██║     ██║   ██║██║   ██║██║   ██║██╔══╝  ██╔══██╗                                 ║
+║    ███████╗╚██████╔╝╚██████╔╝╚██████╔╝███████╗██║  ██║                                 ║
+║    ╚══════╝ ╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝                                 ║
+║                                                                                      ║
+║    📱 App: $appName                                                                  ║
+║    🚀 Powered by Hypn Tech (hypn.com.br)                                            ║
+║                                                                                      ║
+╚══════════════════════════════════════════════════════════════════════════════════════╝''';
+  }
+
+  /// Gets the application name from various sources
+  String _getAppName() {
+    try {
+      // Try to get app name from Flutter
+      if (!kIsWeb) {
+        // For mobile/desktop, we can try to get package name
+        return 'Flutter App';
+      } else {
+        // For web, try to get from document title
+        return 'Web App';
+      }
+    } catch (e) {
+      return 'Unknown App';
+    }
   }
 }

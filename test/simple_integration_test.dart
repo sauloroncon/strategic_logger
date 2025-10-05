@@ -88,15 +88,20 @@ void main() {
         // Generate logs that will use isolates for processing
         final futures = <Future>[];
         for (int i = 0; i < 50; i++) {
-          futures.add(Future(() async {
-            await logger.info(
-              'Isolate integration test $i',
-              context: <String, Object>{
-                'iteration': i,
-                'heavyData': List.generate(1000, (index) => 'heavy_data_$index'),
-              },
-            );
-          }));
+          futures.add(
+            Future(() async {
+              await logger.info(
+                'Isolate integration test $i',
+                context: <String, Object>{
+                  'iteration': i,
+                  'heavyData': List.generate(
+                    1000,
+                    (index) => 'heavy_data_$index',
+                  ),
+                },
+              );
+            }),
+          );
         }
 
         await Future.wait(futures);
@@ -121,7 +126,10 @@ void main() {
             'Isolate fallback test $i',
             context: <String, Object>{
               'iteration': i,
-              'massiveData': List.generate(10000, (index) => 'massive_data_$index'),
+              'massiveData': List.generate(
+                10000,
+                (index) => 'massive_data_$index',
+              ),
             },
           );
         }
@@ -133,31 +141,31 @@ void main() {
     });
 
     group('Performance Monitoring Integration', () {
-      test('should integrate performance monitoring with all operations', () async {
-        await logger.initialize(
-          strategies: [consoleStrategy],
-          useIsolates: true,
-          enablePerformanceMonitoring: true,
-          enableModernConsole: true,
-        );
-
-        // Perform various operations
-        for (int i = 0; i < 100; i++) {
-          await logger.info(
-            'Performance monitoring test $i',
-            context: <String, Object>{
-              'iteration': i,
-              'performance': 'test',
-            },
+      test(
+        'should integrate performance monitoring with all operations',
+        () async {
+          await logger.initialize(
+            strategies: [consoleStrategy],
+            useIsolates: true,
+            enablePerformanceMonitoring: true,
+            enableModernConsole: true,
           );
-        }
 
-        final stats = logger.getPerformanceStats();
-        expect(stats['totalLogs'], equals(100));
-        expect(stats['averageProcessingTime'], greaterThan(0));
-        expect(stats['maxProcessingTime'], greaterThan(0));
-        expect(stats['memoryUsage'], greaterThan(0));
-      });
+          // Perform various operations
+          for (int i = 0; i < 100; i++) {
+            await logger.info(
+              'Performance monitoring test $i',
+              context: <String, Object>{'iteration': i, 'performance': 'test'},
+            );
+          }
+
+          final stats = logger.getPerformanceStats();
+          expect(stats['totalLogs'], equals(100));
+          expect(stats['averageProcessingTime'], greaterThan(0));
+          expect(stats['maxProcessingTime'], greaterThan(0));
+          expect(stats['memoryUsage'], greaterThan(0));
+        },
+      );
 
       test('should track memory usage across operations', () async {
         await logger.initialize(
@@ -186,7 +194,10 @@ void main() {
         final stats = logger.getPerformanceStats();
         expect(stats['totalLogs'], equals(50));
         expect(stats['memoryUsage'], greaterThan(0));
-        expect(memoryIncrease, lessThan(100 * 1024 * 1024)); // Should not increase by more than 100MB
+        expect(
+          memoryIncrease,
+          lessThan(100 * 1024 * 1024),
+        ); // Should not increase by more than 100MB
       });
     });
 
@@ -236,10 +247,7 @@ void main() {
             },
           };
 
-          await logger.info(
-            'Complex context test $i',
-            context: complexContext,
-          );
+          await logger.info('Complex context test $i', context: complexContext);
         }
 
         final stats = logger.getPerformanceStats();
@@ -263,18 +271,12 @@ void main() {
             'doubleValue': i * 1.5,
             'boolValue': i % 2 == 0,
             'listValue': List.generate(10, (index) => 'item_$index'),
-            'mapValue': <String, Object>{
-              'nested': 'value_$i',
-              'number': i,
-            },
+            'mapValue': <String, Object>{'nested': 'value_$i', 'number': i},
             'nullValue': 'null',
             'dateValue': DateTime.now(),
           };
 
-          await logger.info(
-            'Mixed context test $i',
-            context: mixedContext,
-          );
+          await logger.info('Mixed context test $i', context: mixedContext);
         }
 
         final stats = logger.getPerformanceStats();
@@ -299,7 +301,9 @@ void main() {
               'Error handling test $i',
               context: <String, Object>{
                 'iteration': i,
-                'problematicData': i % 3 == 0 ? 'normal' : 'problematic_${i * 1000}',
+                'problematicData': i % 3 == 0
+                    ? 'normal'
+                    : 'problematic_${i * 1000}',
               },
             );
           } catch (e) {
@@ -323,19 +327,24 @@ void main() {
         // Test concurrent operations that might cause errors
         final futures = <Future>[];
         for (int i = 0; i < 25; i++) {
-          futures.add(Future(() async {
-            try {
-              await logger.info(
-                'Concurrent error test $i',
-                context: <String, Object>{
-                  'iteration': i,
-                  'concurrentData': List.generate(500, (index) => 'concurrent_$index'),
-                },
-              );
-            } catch (e) {
-              // Should handle errors gracefully
-            }
-          }));
+          futures.add(
+            Future(() async {
+              try {
+                await logger.info(
+                  'Concurrent error test $i',
+                  context: <String, Object>{
+                    'iteration': i,
+                    'concurrentData': List.generate(
+                      500,
+                      (index) => 'concurrent_$index',
+                    ),
+                  },
+                );
+              } catch (e) {
+                // Should handle errors gracefully
+              }
+            }),
+          );
         }
 
         await Future.wait(futures);
@@ -374,11 +383,12 @@ void main() {
 
         for (int configIndex = 0; configIndex < configs.length; configIndex++) {
           final config = configs[configIndex];
-          
+
           await logger.initialize(
             strategies: [consoleStrategy],
             useIsolates: config['useIsolates'] as bool,
-            enablePerformanceMonitoring: config['enablePerformanceMonitoring'] as bool,
+            enablePerformanceMonitoring:
+                config['enablePerformanceMonitoring'] as bool,
             enableModernConsole: config['enableModernConsole'] as bool,
           );
 
@@ -442,36 +452,38 @@ void main() {
         // Perform comprehensive logging workflow
         final futures = <Future>[];
         for (int i = 0; i < 100; i++) {
-          futures.add(Future(() async {
-            // Log with different levels
-            switch (i % 5) {
-              case 0:
-                await logger.debug('E2E debug test $i');
-                break;
-              case 1:
-                await logger.info('E2E info test $i');
-                break;
-              case 2:
-                await logger.warning('E2E warning test $i');
-                break;
-              case 3:
-                await logger.error('E2E error test $i');
-                break;
-              case 4:
-                await logger.fatal('E2E fatal test $i');
-                break;
-            }
+          futures.add(
+            Future(() async {
+              // Log with different levels
+              switch (i % 5) {
+                case 0:
+                  await logger.debug('E2E debug test $i');
+                  break;
+                case 1:
+                  await logger.info('E2E info test $i');
+                  break;
+                case 2:
+                  await logger.warning('E2E warning test $i');
+                  break;
+                case 3:
+                  await logger.error('E2E error test $i');
+                  break;
+                case 4:
+                  await logger.fatal('E2E fatal test $i');
+                  break;
+              }
 
-            // Log with context
-            await logger.info(
-              'E2E context test $i',
-              context: <String, Object>{
-                'iteration': i,
-                'e2eTest': true,
-                'data': List.generate(50, (index) => 'e2e_data_$index'),
-              },
-            );
-          }));
+              // Log with context
+              await logger.info(
+                'E2E context test $i',
+                context: <String, Object>{
+                  'iteration': i,
+                  'e2eTest': true,
+                  'data': List.generate(50, (index) => 'e2e_data_$index'),
+                },
+              );
+            }),
+          );
         }
 
         await Future.wait(futures);
@@ -482,7 +494,10 @@ void main() {
         // Verify integration
         expect(stats['totalLogs'], equals(200)); // 100 * 2 (level + context)
         expect(stats['debugCount'], equals(20));
-        expect(stats['infoCount'], equals(40)); // 20 from level + 20 from context
+        expect(
+          stats['infoCount'],
+          equals(40),
+        ); // 20 from level + 20 from context
         expect(stats['warningCount'], equals(20));
         expect(stats['errorCount'], equals(20));
         expect(stats['fatalCount'], equals(20));
@@ -499,24 +514,35 @@ void main() {
         // Stress test with high volume
         final futures = <Future>[];
         for (int i = 0; i < 500; i++) {
-          futures.add(Future(() async {
-            await logger.info(
-              'Stress test $i',
-              context: <String, Object>{
-                'iteration': i,
-                'stressTest': true,
-                'heavyData': List.generate(1000, (index) => 'stress_data_$index'),
-              },
-            );
-          }));
+          futures.add(
+            Future(() async {
+              await logger.info(
+                'Stress test $i',
+                context: <String, Object>{
+                  'iteration': i,
+                  'stressTest': true,
+                  'heavyData': List.generate(
+                    1000,
+                    (index) => 'stress_data_$index',
+                  ),
+                },
+              );
+            }),
+          );
         }
 
         await Future.wait(futures);
 
         final stats = logger.getPerformanceStats();
         expect(stats['totalLogs'], equals(500));
-        expect(stats['errorCount'], equals(0)); // Should handle stress gracefully
-        expect(stats['averageProcessingTime'], lessThan(50.0)); // Should still be efficient
+        expect(
+          stats['errorCount'],
+          equals(0),
+        ); // Should handle stress gracefully
+        expect(
+          stats['averageProcessingTime'],
+          lessThan(50.0),
+        ); // Should still be efficient
       });
     });
   });

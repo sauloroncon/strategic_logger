@@ -159,6 +159,10 @@ class ConsoleLogStrategy extends LogStrategy {
         );
       }
 
+      // Output to console (terminal)
+      print(formattedMessage);
+
+      // Also log to developer console (DevTools)
       developer.log(
         formattedMessage,
         name: 'ConsoleLogStrategy',

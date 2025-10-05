@@ -123,7 +123,7 @@ class ModernConsoleFormatter {
         '${timestamp.millisecond.toString().padLeft(3, '0')}';
 
     if (useColors) {
-      return '${_gray}${_dim}$timeStr$_reset';
+      return '$_gray$_dim$timeStr$_reset';
     }
     return timeStr;
   }
@@ -135,7 +135,7 @@ class ModernConsoleFormatter {
     if (useColors) {
       final color = _levelColors[level] ?? _gray;
       final bgColor = _levelBgColors[level] ?? '';
-      return '$color${_bold}$bgColor $levelName $_reset';
+      return '$color$_bold$bgColor $levelName $_reset';
     }
 
     return '[$levelName]';
@@ -155,17 +155,17 @@ class ModernConsoleFormatter {
     final buffer = StringBuffer();
 
     if (useColors) {
-      buffer.write('${_blue}${_bold}📋 Event: $_reset');
-      buffer.write('${_cyan}${event.eventName}$_reset');
+      buffer.write('$_blue$_bold📋 Event: $_reset');
+      buffer.write('$_cyan${event.eventName}$_reset');
 
       if (event.eventMessage != null) {
-        buffer.write('\n${_gray}   Message: $_reset${event.eventMessage}');
+        buffer.write('\n$_gray   Message: $_reset${event.eventMessage}');
       }
 
       if (event.parameters != null && event.parameters!.isNotEmpty) {
-        buffer.write('\n${_gray}   Parameters:$_reset');
+        buffer.write('\n$_gray   Parameters:$_reset');
         for (final entry in event.parameters!.entries) {
-          buffer.write('\n${_gray}     ${entry.key}: $_reset${entry.value}');
+          buffer.write('\n$_gray     ${entry.key}: $_reset${entry.value}');
         }
       }
     } else {
@@ -186,9 +186,9 @@ class ModernConsoleFormatter {
     final buffer = StringBuffer();
 
     if (useColors) {
-      buffer.write('${_magenta}${_bold}🔍 Context:$_reset');
+      buffer.write('$_magenta$_bold🔍 Context:$_reset');
       for (final entry in context.entries) {
-        buffer.write('\n${_gray}   ${entry.key}: $_reset${entry.value}');
+        buffer.write('\n$_gray   ${entry.key}: $_reset${entry.value}');
       }
     } else {
       buffer.write('Context:');
@@ -205,11 +205,11 @@ class ModernConsoleFormatter {
     final buffer = StringBuffer();
 
     if (useColors) {
-      buffer.write('${_red}${_bold}📚 Stack Trace:$_reset');
+      buffer.write('$_red$_bold📚 Stack Trace:$_reset');
       final lines = stackTrace.toString().split('\n');
       for (final line in lines) {
         if (line.trim().isNotEmpty) {
-          buffer.write('\n${_gray}   $line$_reset');
+          buffer.write('\n$_gray   $line$_reset');
         }
       }
     } else {
@@ -223,7 +223,7 @@ class ModernConsoleFormatter {
   String createSeparator({bool useColors = true, int length = 80}) {
     final line = '═' * length;
     if (useColors) {
-      return '${_gray}$line$_reset';
+      return '$_gray$line$_reset';
     }
     return line;
   }
@@ -235,12 +235,12 @@ class ModernConsoleFormatter {
 
     if (useColors) {
       buffer.write('$separator\n');
-      buffer.write('${_bold}${_blue}🎯 $title$_reset\n');
-      buffer.write('$separator');
+      buffer.write('$_bold$_blue🎯 $title$_reset\n');
+      buffer.write(separator);
     } else {
       buffer.write('$separator\n');
       buffer.write('🎯 $title\n');
-      buffer.write('$separator');
+      buffer.write(separator);
     }
 
     return buffer.toString();
@@ -267,7 +267,7 @@ class ModernConsoleFormatter {
       final value = entry.value;
 
       if (useColors) {
-        buffer.write('${_cyan}$key$_reset: ${_white}$value$_reset\n');
+        buffer.write('$_cyan$key$_reset: $_white$value$_reset\n');
       } else {
         buffer.write('$key: $value\n');
       }
@@ -285,7 +285,7 @@ class ModernConsoleFormatter {
 
       if (useColors) {
         buffer.write(
-          '${_gray}${(i + 1).toString().padLeft(2)}. $_reset${_white}$item$_reset\n',
+          '$_gray${(i + 1).toString().padLeft(2)}. $_reset$_white$item$_reset\n',
         );
       } else {
         buffer.write('${(i + 1).toString().padLeft(2)}. $item\n');

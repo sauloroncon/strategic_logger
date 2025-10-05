@@ -42,7 +42,7 @@ class ObjectPool {
     _initializeContextMapPool();
 
     developer.log(
-      'ObjectPool initialized with ${_initialPoolSize} objects per pool',
+      'ObjectPool initialized with $_initialPoolSize objects per pool',
       name: 'ObjectPool',
     );
   }

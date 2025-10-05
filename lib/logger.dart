@@ -1,4 +1,3 @@
-/// Provides a modern, high-performance logging framework with built-in strategies for console, Sentry,
 /// and other analytics integration.
 ///
 /// This library is designed to facilitate easy and structured logging across different platforms
@@ -11,7 +10,6 @@
 /// - Modern console formatting with colors and emojis
 /// - Compatibility with popular logger packages
 /// - Async queue with backpressure control
-library logger;
 
 /// Initializes the logger with default settings. Example usage:
 ///

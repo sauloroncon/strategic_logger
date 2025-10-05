@@ -28,8 +28,10 @@ class FirebaseAnalyticsLogStrategy extends LogStrategy {
   ///
   /// [logLevel] sets the log level at which this strategy becomes active, allowing for targeted logging based on severity.
   /// [supportedEvents] optionally specifies which types of [LogEvent] this strategy should handle, enhancing event filtering.
-  FirebaseAnalyticsLogStrategy(
-      {super.logLevel = LogLevel.none, super.supportedEvents});
+  FirebaseAnalyticsLogStrategy({
+    super.logLevel = LogLevel.none,
+    super.supportedEvents,
+  });
 
   /// Logs a message or a structured event to Firebase Analytics, facilitating broad and detailed analytics.
   ///
@@ -86,8 +88,11 @@ class FirebaseAnalyticsLogStrategy extends LogStrategy {
   /// [stackTrace] - The stack trace associated with the error, providing deeper insight for debugging purposes.
   /// [event] - An optional [LogEvent] providing additional context for the error, enhancing error analysis.
   @override
-  Future<void> error(
-      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> error({
+    dynamic error,
+    StackTrace? stackTrace,
+    LogEvent? event,
+  }) async {
     try {
       if (shouldLog(event: event)) {
         developer.log(
@@ -106,9 +111,7 @@ class FirebaseAnalyticsLogStrategy extends LogStrategy {
             },
           );
         } else {
-          _analytics.logEvent(
-            name: '$error',
-          );
+          _analytics.logEvent(name: '$error');
         }
       }
     } catch (e, stack) {
@@ -146,9 +149,7 @@ class FirebaseAnalyticsLogStrategy extends LogStrategy {
             },
           );
         } else {
-          _analytics.logEvent(
-            name: 'FATAL: $error',
-          );
+          _analytics.logEvent(name: 'FATAL: $error');
         }
       }
     } catch (e, stack) {

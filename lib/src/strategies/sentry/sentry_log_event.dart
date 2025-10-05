@@ -45,10 +45,7 @@ class SentryLogEvent extends LogEvent {
   Map<String, dynamic> toMap() {
     return {
       'name': eventName,
-      'parameters': {
-        'error': eventMessage,
-        'stackTrace': stackTrace,
-      },
+      'parameters': {'error': eventMessage, 'stackTrace': stackTrace},
     };
   }
 }

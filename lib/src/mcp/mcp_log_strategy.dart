@@ -31,18 +31,13 @@ class MCPLogStrategy extends LogStrategy {
   }) : _mcpServer = mcpServer ?? MCPServer.instance,
        _enableRealTimeStreaming = enableRealTimeStreaming,
        _enableHealthMonitoring = enableHealthMonitoring,
-       _defaultContext = defaultContext ?? {};
-
-  @override
-  LogLevel logLevel = LogLevel.info;
-
-  @override
-  LogLevel loggerLogLevel = LogLevel.info;
-
-  @override
-  List<LogEvent>? supportedEvents = [
-    LogEvent(eventName: 'mcp_log', eventMessage: 'MCP structured log entry'),
-  ];
+       _defaultContext = defaultContext ?? {} {
+    logLevel = LogLevel.info;
+    loggerLogLevel = LogLevel.info;
+    supportedEvents = [
+      LogEvent(eventName: 'mcp_log', eventMessage: 'MCP structured log entry'),
+    ];
+  }
 
   /// Starts the MCP server if not already running
   Future<void> startServer() async {

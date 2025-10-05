@@ -6,7 +6,7 @@ import 'dart:typed_data';
 class MockMCPServer {
   final List<Map<String, dynamic>> _logHistory = [];
   bool _isRunning = false;
-  int _port = 8080;
+  final int _port = 8080;
 
   bool get isRunning => _isRunning;
   int get port => _port;
@@ -75,12 +75,7 @@ class MockAIStrategy {
     if (_logBuffer.isEmpty) return;
 
     // Simulate AI analysis
-    final analysisResult = {
-      'timestamp': DateTime.now().toIso8601String(),
-      'patterns_found': _logBuffer.length > 10 ? 3 : 1,
-      'recommendations': _generateRecommendations(),
-      'insights': _generateInsights(),
-    };
+    // Analysis completed
 
     // Clear buffer after analysis
     _logBuffer.clear();
@@ -379,8 +374,8 @@ void main() {
       stringPool.returnObject(obj1);
       stringPool.returnObject(obj2);
 
-      final obj3 = stringPool.get();
-      final obj4 = stringPool.get();
+      stringPool.get();
+      stringPool.get();
 
       final stats = stringPool.getStats();
       expect(stats['pool_size'], equals(0));

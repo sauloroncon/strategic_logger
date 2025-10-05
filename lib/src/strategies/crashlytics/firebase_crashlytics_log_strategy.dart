@@ -48,8 +48,9 @@ class FirebaseCrashlyticsLogStrategy extends LogStrategy {
         );
         if (event != null) {
           if (event is FirebaseCrashlyticsLogEvent) {
-            FirebaseCrashlytics.instance
-                .log('${event.eventName}: ${event.eventMessage}');
+            FirebaseCrashlytics.instance.log(
+              '${event.eventName}: ${event.eventMessage}',
+            );
           }
         } else {
           FirebaseCrashlytics.instance.log('Message: $message');
@@ -95,8 +96,11 @@ class FirebaseCrashlyticsLogStrategy extends LogStrategy {
   /// [stackTrace] - the stack trace associated with the error.
   /// [event] - an optional [LogEvent] providing additional context for the error.
   @override
-  Future<void> error(
-      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> error({
+    dynamic error,
+    StackTrace? stackTrace,
+    LogEvent? event,
+  }) async {
     try {
       if (shouldLog(event: event)) {
         developer.log(
@@ -104,8 +108,11 @@ class FirebaseCrashlyticsLogStrategy extends LogStrategy {
           name: 'FirebaseCrashlyticsLogStrategy',
         );
         if (event != null && event is FirebaseCrashlyticsLogEvent) {
-          FirebaseCrashlytics.instance
-              .recordError(error, stackTrace, reason: event.eventMessage);
+          FirebaseCrashlytics.instance.recordError(
+            error,
+            stackTrace,
+            reason: event.eventMessage,
+          );
         } else {
           FirebaseCrashlytics.instance.recordError(error, stackTrace);
         }
@@ -129,8 +136,11 @@ class FirebaseCrashlyticsLogStrategy extends LogStrategy {
   /// [stackTrace] - the stack trace associated with the critical error.
   /// [event] - an optional [LogEvent] providing additional context for the critical error.
   @override
-  Future<void> fatal(
-      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> fatal({
+    dynamic error,
+    StackTrace? stackTrace,
+    LogEvent? event,
+  }) async {
     try {
       if (shouldLog(event: event)) {
         developer.log(
@@ -138,11 +148,18 @@ class FirebaseCrashlyticsLogStrategy extends LogStrategy {
           name: 'FirebaseCrashlyticsLogStrategy',
         );
         if (event != null && event is FirebaseCrashlyticsLogEvent) {
-          FirebaseCrashlytics.instance.recordError(error, stackTrace,
-              reason: event.eventMessage, fatal: true);
+          FirebaseCrashlytics.instance.recordError(
+            error,
+            stackTrace,
+            reason: event.eventMessage,
+            fatal: true,
+          );
         } else {
-          FirebaseCrashlytics.instance
-              .recordError(error, stackTrace, fatal: true);
+          FirebaseCrashlytics.instance.recordError(
+            error,
+            stackTrace,
+            fatal: true,
+          );
         }
       }
     } catch (e, stack) {

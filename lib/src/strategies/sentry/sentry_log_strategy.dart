@@ -25,10 +25,7 @@ class SentryLogStrategy extends LogStrategy {
   ///
   /// [logLevel] sets the log level at which this strategy becomes active.
   /// [supportedEvents] optionally specifies which types of [LogEvent] this strategy should handle.
-  SentryLogStrategy({
-    super.logLevel = LogLevel.none,
-    super.supportedEvents,
-  });
+  SentryLogStrategy({super.logLevel = LogLevel.none, super.supportedEvents});
 
   /// Logs a message or a structured event to Sentry.
   ///
@@ -41,10 +38,7 @@ class SentryLogStrategy extends LogStrategy {
   Future<void> log({dynamic message, LogEvent? event}) async {
     try {
       if (shouldLog(event: event)) {
-        developer.log(
-          'Logging to Sentry',
-          name: 'SentryLogStrategy',
-        );
+        developer.log('Logging to Sentry', name: 'SentryLogStrategy');
         if (event != null && event is SentryLogEvent) {
           Sentry.captureMessage('${event.eventName}: ${event.eventMessage}');
         } else {
@@ -91,14 +85,14 @@ class SentryLogStrategy extends LogStrategy {
   /// [stackTrace] - the stack trace associated with the error.
   /// [event] - an optional [LogEvent] providing additional context for the error.
   @override
-  Future<void> error(
-      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> error({
+    dynamic error,
+    StackTrace? stackTrace,
+    LogEvent? event,
+  }) async {
     try {
       if (shouldLog(event: event)) {
-        developer.log(
-          'Reporting error to Sentry',
-          name: 'SentryLogStrategy',
-        );
+        developer.log('Reporting error to Sentry', name: 'SentryLogStrategy');
         if (event != null) {
           Sentry.captureException(error, stackTrace: stackTrace);
         }
@@ -122,8 +116,11 @@ class SentryLogStrategy extends LogStrategy {
   /// [stackTrace] - the stack trace associated with the critical error.
   /// [event] - an optional [LogEvent] providing additional context for the critical error.
   @override
-  Future<void> fatal(
-      {dynamic error, StackTrace? stackTrace, LogEvent? event}) async {
+  Future<void> fatal({
+    dynamic error,
+    StackTrace? stackTrace,
+    LogEvent? event,
+  }) async {
     try {
       if (shouldLog(event: event)) {
         developer.log(

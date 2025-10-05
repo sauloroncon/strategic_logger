@@ -46,23 +46,18 @@ class AILogStrategy extends LogStrategy {
        _enableInsights = enableInsights,
        _enableAnomalyDetection = enableAnomalyDetection,
        _analysisInterval = analysisInterval,
-       _batchSize = batchSize;
-
-  @override
-  LogLevel logLevel = LogLevel.info;
-
-  @override
-  LogLevel loggerLogLevel = LogLevel.info;
-
-  @override
-  List<LogEvent>? supportedEvents = [
-    LogEvent(
-      eventName: 'ai_analysis',
-      eventMessage: 'AI analysis of log patterns',
-    ),
-    LogEvent(eventName: 'ai_insight', eventMessage: 'AI-generated insight'),
-    LogEvent(eventName: 'ai_anomaly', eventMessage: 'AI-detected anomaly'),
-  ];
+       _batchSize = batchSize {
+    logLevel = LogLevel.info;
+    loggerLogLevel = LogLevel.info;
+    supportedEvents = [
+      LogEvent(
+        eventName: 'ai_analysis',
+        eventMessage: 'AI analysis of log patterns',
+      ),
+      LogEvent(eventName: 'ai_insight', eventMessage: 'AI-generated insight'),
+      LogEvent(eventName: 'ai_anomaly', eventMessage: 'AI-detected anomaly'),
+    ];
+  }
 
   /// Stream of AI insights
   Stream<AIInsight> get insightsStream => _insightsController.stream;

@@ -1,9 +1,7 @@
-/// Provides the necessary components for extending the Strategic Logger with custom logging strategies.
 ///
 /// This library exposes the core functionalities and base classes required for developers
 /// to create and integrate new log strategies. It is ideal for developers looking to implement
 /// customized logging behavior or to integrate with logging platforms not supported out of the box.
-library logger_extension;
 
 /// Core logger class that manages the logging operations.
 /// This class can be utilized to understand the fundamental logging mechanism and to
