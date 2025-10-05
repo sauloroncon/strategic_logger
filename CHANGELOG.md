@@ -1,3 +1,26 @@
+# 1.1.2
+
+## 🚀 Platform Detection & Web Compatibility - Strategic Logger 1.1.2
+
+### ✨ New Features
+- **Automatic Platform Detection**: Package now automatically detects platform capabilities
+- **Web Compatibility**: Isolates are automatically disabled on web platform
+- **Cross-Platform Support**: Seamless operation across web, mobile, and desktop platforms
+- **Smart Defaults**: `useIsolates` parameter is now optional with intelligent defaults
+
+### 🔧 Technical Improvements
+- **Platform Detection Method**: Added `_isIsolateSupported()` for runtime platform detection
+- **Web Platform Handling**: Uses `kIsWeb` to detect web platform and disable isolates
+- **Backward Compatibility**: Maintains support for explicit `useIsolates` parameter
+- **Error Prevention**: Prevents isolate-related errors on unsupported platforms
+
+### 📱 Platform Support
+- **Web**: Isolates automatically disabled, console logging optimized
+- **Mobile (iOS/Android)**: Full isolate support for performance
+- **Desktop (macOS/Windows/Linux)**: Full isolate support for performance
+
+---
+
 # 1.1.1
 
 ## 🐛 Bug Fixes - Strategic Logger 1.1.1

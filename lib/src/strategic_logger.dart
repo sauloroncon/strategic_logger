@@ -11,6 +11,9 @@ import 'errors/not_initialized_error.dart';
 import 'events/log_event.dart';
 import 'strategies/log_strategy.dart';
 
+// Platform detection
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 /// A flexible and centralized logger that supports multiple logging strategies.
 ///
 /// `StrategicLogger` is designed to handle logging across various levels and strategies,
@@ -40,6 +43,16 @@ class StrategicLogger {
 
   /// Indicates whether the logger has been initialized.
   bool get isInitialized => _isInitialized;
+
+  /// Determines if isolates are supported on the current platform.
+  /// 
+  /// Returns false for web platform and true for all other platforms.
+  bool _isIsolateSupported() {
+    if (kIsWeb) {
+      return false; // Isolates not supported on web
+    }
+    return true; // Isolates supported on mobile/desktop
+  }
 
   LogLevel _initLogLevel = LogLevel.none;
 
@@ -92,14 +105,17 @@ class StrategicLogger {
   Future<void> initialize({
     List<LogStrategy>? strategies,
     LogLevel level = LogLevel.none,
-    bool useIsolates = true,
+    bool? useIsolates, // Made nullable to allow auto-detection
     bool enablePerformanceMonitoring = true,
     bool enableModernConsole = true,
   }) async {
+    // Auto-detect platform support for isolates
+    final shouldUseIsolates = useIsolates ?? _isIsolateSupported();
+    
     await logger._initialize(
       strategies: strategies,
       level: level,
-      useIsolates: useIsolates,
+      useIsolates: shouldUseIsolates,
       enablePerformanceMonitoring: enablePerformanceMonitoring,
       enableModernConsole: enableModernConsole,
     );
