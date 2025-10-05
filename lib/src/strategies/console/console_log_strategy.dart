@@ -61,7 +61,14 @@ class ConsoleLogStrategy extends LogStrategy {
   /// [event] - An optional [LogEvent] providing structured data for logging.
   @override
   Future<void> log({dynamic message, LogEvent? event}) async {
+    // For the generic log method, we need to determine the level from context
+    // Since we can't know the intended level, we'll use info as default
     await _logMessage(LogLevel.info, message, event: event);
+  }
+
+  /// Internal method to log with a specific level
+  Future<void> logWithLevel(LogLevel level, {dynamic message, LogEvent? event}) async {
+    await _logMessage(level, message, event: event);
   }
 
   /// Logs a message or a structured event to the console.
@@ -137,6 +144,7 @@ class ConsoleLogStrategy extends LogStrategy {
           formattedMessage = formatted['formatted'] as String;
         } catch (e) {
           // Fallback to direct formatting
+          // Disable emojis since we're using the formatted header
           formattedMessage = modernConsoleFormatter.formatLog(
             level: level,
             message: message.toString(),
@@ -144,7 +152,7 @@ class ConsoleLogStrategy extends LogStrategy {
             event: event,
             stackTrace: stackTrace,
             useColors: _useColors,
-            useEmojis: _useEmojis,
+            useEmojis: false, // Disabled because we have formatted header
             showTimestamp: _showTimestamp,
             showContext: _showContext,
           );
@@ -159,12 +167,15 @@ class ConsoleLogStrategy extends LogStrategy {
         );
       }
 
+      // Add HYPN-TECH header to all logs with visual formatting
+      final finalMessage = _formatLogHeader(level, formattedMessage);
+
       // Output to console (terminal)
-      print(formattedMessage);
+      print(finalMessage);
 
       // Also log to developer console (DevTools)
       developer.log(
-        formattedMessage,
+        finalMessage,
         name: 'ConsoleLogStrategy',
         error: level == LogLevel.error || level == LogLevel.fatal
             ? message
@@ -181,6 +192,74 @@ class ConsoleLogStrategy extends LogStrategy {
     }
   }
 
+  /// Formats the log header with visual styling and colors
+  String _formatLogHeader(LogLevel level, String message) {
+    if (!_useColors) {
+      // Fallback to simple format without colors
+      return '[HYPN-TECH][STRATEGIC-LOGGER][${level.name.toUpperCase()}] $message';
+    }
+
+    // ANSI color codes
+    const String reset = '\x1B[0m';
+    const String bold = '\x1B[1m';
+    const String dim = '\x1B[2m';
+    
+    // HYPN-TECH colors (teal/cyan theme)
+    const String hypnTechColor = '\x1B[36m'; // Cyan
+    const String hypnTechBg = '\x1B[46m'; // Cyan background
+    const String hypnTechText = '\x1B[30m'; // Black text on cyan background
+    
+    // STRATEGIC-LOGGER colors (blue theme)
+    const String strategicLoggerColor = '\x1B[34m'; // Blue
+    const String strategicLoggerBg = '\x1B[44m'; // Blue background
+    const String strategicLoggerText = '\x1B[37m'; // White text on blue background
+    
+    // Level colors
+    String levelColor;
+    String levelBg;
+    String levelText;
+    
+    switch (level) {
+      case LogLevel.debug:
+        levelColor = '\x1B[35m'; // Magenta
+        levelBg = '\x1B[45m'; // Magenta background
+        levelText = '\x1B[37m'; // White text
+        break;
+      case LogLevel.info:
+        levelColor = '\x1B[32m'; // Green
+        levelBg = '\x1B[42m'; // Green background
+        levelText = '\x1B[30m'; // Black text
+        break;
+      case LogLevel.warning:
+        levelColor = '\x1B[33m'; // Yellow
+        levelBg = '\x1B[43m'; // Yellow background
+        levelText = '\x1B[30m'; // Black text
+        break;
+      case LogLevel.error:
+        levelColor = '\x1B[31m'; // Red
+        levelBg = '\x1B[41m'; // Red background
+        levelText = '\x1B[37m'; // White text
+        break;
+      case LogLevel.fatal:
+        levelColor = '\x1B[91m'; // Bright red
+        levelBg = '\x1B[101m'; // Bright red background
+        levelText = '\x1B[37m'; // White text
+        break;
+      case LogLevel.none:
+        levelColor = '\x1B[37m'; // White
+        levelBg = '\x1B[47m'; // White background
+        levelText = '\x1B[30m'; // Black text
+        break;
+    }
+
+    // Format the header with visual styling
+    final String hypnTechPart = '$hypnTechBg$hypnTechText$bold HYPN-TECH $reset';
+    final String strategicLoggerPart = '$strategicLoggerBg$strategicLoggerText$bold STRATEGIC-LOGGER $reset';
+    final String levelPart = '$levelBg$levelText$bold ${level.name.toUpperCase()} $reset';
+    
+    return '$hypnTechPart$strategicLoggerPart$levelPart$message';
+  }
+
   /// Legacy message formatting for backward compatibility
   String _formatLegacyMessage(
     LogLevel level,
@@ -190,25 +269,17 @@ class ConsoleLogStrategy extends LogStrategy {
   ) {
     final buffer = StringBuffer();
 
-    buffer.writeln(
-      '>>═══════════════════════CONSOLELOG STRATEGY [${level.name.toUpperCase()}]═══════════════════════>>',
-    );
-
     if (event != null) {
-      buffer.writeln(
+      buffer.write(
         'eventName: ${event.eventName} eventMessage: ${event.eventMessage ?? "No message"} message: $message',
       );
     } else {
-      buffer.writeln('$message');
+      buffer.write('$message');
     }
 
     if (stackTrace != null) {
-      buffer.writeln('Stack Trace: $stackTrace');
+      buffer.write(' Stack Trace: $stackTrace');
     }
-
-    buffer.writeln(
-      '<<═══════════════════════CONSOLELOG STRATEGY [${level.name.toUpperCase()}]═══════════════════════<<',
-    );
 
     return buffer.toString();
   }

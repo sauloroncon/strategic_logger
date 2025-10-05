@@ -6,6 +6,7 @@ import 'core/isolate_manager.dart';
 import 'core/log_queue.dart';
 import 'core/performance_monitor.dart';
 import 'enums/log_level.dart';
+import 'strategies/console/console_log_strategy.dart';
 
 import 'errors/alread_initialized_error.dart';
 import 'errors/not_initialized_error.dart';
@@ -221,7 +222,11 @@ class StrategicLogger {
           await strategy.info(message: entry.message, event: entry.event);
           break;
         case LogLevel.warning:
-          await strategy.log(message: entry.message, event: entry.event);
+          if (strategy is ConsoleLogStrategy) {
+            await (strategy as ConsoleLogStrategy).logWithLevel(LogLevel.warning, message: entry.message, event: entry.event);
+          } else {
+            await strategy.log(message: entry.message, event: entry.event);
+          }
           break;
         case LogLevel.error:
           await strategy.error(
@@ -550,17 +555,17 @@ class StrategicLogger {
     String logMessage = [
       asciiArt,
       '',
-      '[HYPN-TECH] 🚀 STRATEGIC LOGGER CONFIGURATION',
-      '[HYPN-TECH] ✅ Logger initialized successfully!',
-      '[HYPN-TECH] 📋 CONFIGURATION:',
+      '[HYPN-TECH] STRATEGIC LOGGER CONFIGURATION',
+      '[HYPN-TECH] Logger initialized successfully!',
+      '[HYPN-TECH] CONFIGURATION:',
       '[HYPN-TECH]     • Log Level: $_initLogLevel',
       '[HYPN-TECH]     • Use Isolates: $_useIsolates',
       '[HYPN-TECH]     • Performance Monitoring: $_enablePerformanceMonitoring',
       '[HYPN-TECH]     • Modern Console: $_enableModernConsole',
-      '[HYPN-TECH] 🎯 ACTIVE STRATEGIES:',
+      '[HYPN-TECH] ACTIVE STRATEGIES:',
       strategiesFormatted,
-      '[HYPN-TECH] 🌐 Platform: ${_isIsolateSupported() ? '✅ Isolates Supported' : '❌ Isolates Not Supported'}',
-      '[HYPN-TECH] 📱 App: $appName',
+      '[HYPN-TECH] Platform: ${_isIsolateSupported() ? 'Isolates Supported' : 'Isolates Not Supported'}',
+      '[HYPN-TECH] App: $appName',
     ].join('\n');
 
     // Log to console (terminal)
@@ -592,7 +597,7 @@ class StrategicLogger {
 █          / /___/ /_/ / /_/ / /_/ / /___/ _, _/                  █
 █         /_____/\\____/\\____/\\____/_____/_/ |_| v$version            █
 █                                                                 █
-█                    🚀 Powered by Hypn Tech                      █
+█                       Powered by Hypn Tech                       █
 █                            (hypn.com.br)                        █
 ███████████████████████████████████████████████████████████████████''';
   }
@@ -600,7 +605,7 @@ class StrategicLogger {
   /// Gets the package version from pubspec.yaml
   String _getPackageVersion() {
     try {
-      // Try to read from pubspec.yaml
+      // Try to read from pubspec.yaml in current directory
       final pubspecFile = File('pubspec.yaml');
       if (pubspecFile.existsSync()) {
         final content = pubspecFile.readAsStringSync();
@@ -609,13 +614,27 @@ class StrategicLogger {
           multiLine: true,
         ).firstMatch(content);
         if (versionMatch != null) {
-          return versionMatch.group(1)?.trim() ?? '1.0.0';
+          return versionMatch.group(1)?.trim() ?? '1.2.2';
+        }
+      }
+      
+      // Try to read from parent directory (for example apps)
+      final parentPubspecFile = File('../pubspec.yaml');
+      if (parentPubspecFile.existsSync()) {
+        final content = parentPubspecFile.readAsStringSync();
+        final versionMatch = RegExp(
+          r'^version:\s*(.+)$',
+          multiLine: true,
+        ).firstMatch(content);
+        if (versionMatch != null) {
+          return versionMatch.group(1)?.trim() ?? '1.2.2';
         }
       }
     } catch (e) {
       // Fallback if file reading fails
+      developer.log('Could not read version from pubspec.yaml: $e', name: 'StrategicLogger');
     }
-    return '1.2.1'; // Fallback version
+    return '1.2.2'; // Fallback version
   }
 
   /// Gets the application name from various sources

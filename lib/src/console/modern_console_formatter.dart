@@ -31,12 +31,12 @@ class ModernConsoleFormatter {
 
   // Emojis for different log levels
   static const Map<LogLevel, String> _levelEmojis = {
-    LogLevel.debug: '🐛',
-    LogLevel.info: 'ℹ️',
-    LogLevel.warning: '⚠️',
-    LogLevel.error: '❌',
-    LogLevel.fatal: '💀',
-    LogLevel.none: '📝',
+    LogLevel.debug: '[DEBUG]',
+    LogLevel.info: '[INFO]',
+    LogLevel.warning: '[WARN]',
+    LogLevel.error: '[ERROR]',
+    LogLevel.fatal: '[FATAL]',
+    LogLevel.none: '[NONE]',
   };
 
   // Colors for different log levels
@@ -76,7 +76,7 @@ class ModernConsoleFormatter {
 
     // Add emoji if enabled
     if (useEmojis) {
-      buffer.write('${_levelEmojis[level] ?? '📝'} ');
+      buffer.write('${_levelEmojis[level] ?? '[NONE]'} ');
     }
 
     // Add timestamp if enabled
@@ -155,7 +155,7 @@ class ModernConsoleFormatter {
     final buffer = StringBuffer();
 
     if (useColors) {
-      buffer.write('$_blue$_bold📋 Event: $_reset');
+      buffer.write('$_blue$_bold[EVENT] $_reset');
       buffer.write('$_cyan${event.eventName}$_reset');
 
       if (event.eventMessage != null) {
@@ -186,7 +186,7 @@ class ModernConsoleFormatter {
     final buffer = StringBuffer();
 
     if (useColors) {
-      buffer.write('$_magenta$_bold🔍 Context:$_reset');
+      buffer.write('$_magenta$_bold[CONTEXT]$_reset');
       for (final entry in context.entries) {
         buffer.write('\n$_gray   ${entry.key}: $_reset${entry.value}');
       }
@@ -235,11 +235,11 @@ class ModernConsoleFormatter {
 
     if (useColors) {
       buffer.write('$separator\n');
-      buffer.write('$_bold$_blue🎯 $title$_reset\n');
+      buffer.write('$_bold$_blue[TITLE] $title$_reset\n');
       buffer.write(separator);
     } else {
       buffer.write('$separator\n');
-      buffer.write('🎯 $title\n');
+      buffer.write('[TITLE] $title\n');
       buffer.write(separator);
     }
 
