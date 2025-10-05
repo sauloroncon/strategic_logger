@@ -1,3 +1,32 @@
+# 1.2.2
+
+## 🎨 ASCII Art & Version Display Improvements - Strategic Logger 1.2.2
+
+### ✨ New Features
+- **Dynamic Version Display**: ASCII art now displays version dynamically from pubspec.yaml
+- **Enhanced ASCII Art**: Improved positioning and formatting of version information
+- **Clean Configuration Logs**: Replaced complex box with simple `[HYPN-TECH]` header format
+
+### 🎨 UI/UX Improvements
+- **Version Integration**: Version now appears elegantly in the ASCII art banner
+- **Simplified Log Format**: Configuration logs use clean `[HYPN-TECH]` prefix format
+- **Professional Branding**: Enhanced Hypn Tech branding integration
+- **Dynamic Version Reading**: Automatic version detection from pubspec.yaml
+
+### 🔧 Technical Improvements
+- **Version Detection**: Added `_getPackageVersion()` method to read version from pubspec.yaml
+- **Fallback Handling**: Robust fallback to default version if pubspec.yaml cannot be read
+- **Code Organization**: Improved ASCII art generation with dynamic version integration
+- **Maintainability**: Version updates automatically reflect in ASCII art
+
+### 📱 ASCII Art Features
+- **Dynamic Version**: `v1.2.2` automatically displayed in ASCII art
+- **Professional Layout**: Clean, modern ASCII art with proper spacing
+- **Brand Integration**: Hypn Tech branding prominently displayed
+- **Version Positioning**: Elegant version placement within ASCII art structure
+
+---
+
 # 1.2.1
 
 ## 🔧 Static Analysis Improvements - Strategic Logger 1.2.1
