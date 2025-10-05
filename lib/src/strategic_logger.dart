@@ -223,7 +223,7 @@ class StrategicLogger {
           break;
         case LogLevel.warning:
           if (strategy is ConsoleLogStrategy) {
-            await (strategy as ConsoleLogStrategy).logWithLevel(LogLevel.warning, message: entry.message, event: entry.event);
+            await strategy.logWithLevel(LogLevel.warning, message: entry.message, event: entry.event);
           } else {
             await strategy.log(message: entry.message, event: entry.event);
           }

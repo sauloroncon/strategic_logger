@@ -28,7 +28,6 @@ import '../log_strategy.dart';
 class ConsoleLogStrategy extends LogStrategy {
   final bool _useModernFormatting;
   final bool _useColors;
-  final bool _useEmojis;
   final bool _showTimestamp;
   final bool _showContext;
 
@@ -38,7 +37,6 @@ class ConsoleLogStrategy extends LogStrategy {
   /// [supportedEvents] optionally specifies which types of [LogEvent] this strategy should handle.
   /// [useModernFormatting] enables modern console formatting with colors and emojis.
   /// [useColors] enables colored output.
-  /// [useEmojis] enables emoji indicators for log levels.
   /// [showTimestamp] shows timestamp in logs.
   /// [showContext] shows context information in logs.
   ConsoleLogStrategy({
@@ -46,12 +44,10 @@ class ConsoleLogStrategy extends LogStrategy {
     super.supportedEvents,
     bool useModernFormatting = true,
     bool useColors = true,
-    bool useEmojis = true,
     bool showTimestamp = true,
     bool showContext = true,
   }) : _useModernFormatting = useModernFormatting,
        _useColors = useColors,
-       _useEmojis = useEmojis,
        _showTimestamp = showTimestamp,
        _showContext = showContext;
 
@@ -202,51 +198,41 @@ class ConsoleLogStrategy extends LogStrategy {
     // ANSI color codes
     const String reset = '\x1B[0m';
     const String bold = '\x1B[1m';
-    const String dim = '\x1B[2m';
     
     // HYPN-TECH colors (teal/cyan theme)
-    const String hypnTechColor = '\x1B[36m'; // Cyan
     const String hypnTechBg = '\x1B[46m'; // Cyan background
     const String hypnTechText = '\x1B[30m'; // Black text on cyan background
     
     // STRATEGIC-LOGGER colors (blue theme)
-    const String strategicLoggerColor = '\x1B[34m'; // Blue
     const String strategicLoggerBg = '\x1B[44m'; // Blue background
     const String strategicLoggerText = '\x1B[37m'; // White text on blue background
     
     // Level colors
-    String levelColor;
     String levelBg;
     String levelText;
     
     switch (level) {
       case LogLevel.debug:
-        levelColor = '\x1B[35m'; // Magenta
         levelBg = '\x1B[45m'; // Magenta background
         levelText = '\x1B[37m'; // White text
         break;
       case LogLevel.info:
-        levelColor = '\x1B[32m'; // Green
         levelBg = '\x1B[42m'; // Green background
         levelText = '\x1B[30m'; // Black text
         break;
       case LogLevel.warning:
-        levelColor = '\x1B[33m'; // Yellow
         levelBg = '\x1B[43m'; // Yellow background
         levelText = '\x1B[30m'; // Black text
         break;
       case LogLevel.error:
-        levelColor = '\x1B[31m'; // Red
         levelBg = '\x1B[41m'; // Red background
         levelText = '\x1B[37m'; // White text
         break;
       case LogLevel.fatal:
-        levelColor = '\x1B[91m'; // Bright red
         levelBg = '\x1B[101m'; // Bright red background
         levelText = '\x1B[37m'; // White text
         break;
       case LogLevel.none:
-        levelColor = '\x1B[37m'; // White
         levelBg = '\x1B[47m'; // White background
         levelText = '\x1B[30m'; // Black text
         break;
