@@ -85,7 +85,7 @@ Add Strategic Logger to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  strategic_logger: ^1.1.0
+  strategic_logger: ^1.3.0
 ```
 
 Then run:
@@ -780,7 +780,7 @@ Strategic Logger is released under the **MIT License**. See [LICENSE](LICENSE) f
 - [Docker Images](docs/docker.md) - Container deployment guide
 
 ### 🌟 **Community**
-- [GitHub Discussions](https://github.com/sauloroncon/strategic_logger/discussions) - Community support
+- [GitHub Discussions](https://github.com/Hypn-Tech/strategic_logger/discussions) - Community support
 - [Discord Server](https://discord.gg/strategic-logger) - Real-time chat
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/strategic-logger) - Q&A support
 - [Reddit Community](https://reddit.com/r/strategic_logger) - Discussions and news
@@ -791,7 +791,7 @@ Strategic Logger is released under the **MIT License**. See [LICENSE](LICENSE) f
 
 **Made with ❤️ by the Strategic Logger team**
 
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sauloroncon/strategic_logger)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Hypn-Tech/strategic_logger)
 [![Pub](https://img.shields.io/badge/Pub-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://pub.dev/packages/strategic_logger)
 [![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/strategic_logger)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/company/strategic-logger)
@@ -807,7 +807,7 @@ Strategic Logger is released under the **MIT License**. See [LICENSE](LICENSE) f
 
 ### 📊 **Package Statistics**
 
-- **Version**: 1.1.0
+- **Version**: 1.3.0
 - **Downloads**: 10,000+
 - **GitHub Stars**: 5,000+
 - **Contributors**: 50+

@@ -1,10 +1,10 @@
 name: strategic_logger
 description: Modern, high-performance logging framework for Flutter & Dart applications with multi-strategy logging, isolate-based processing, and beautiful console output.
-version: 1.2.4
-repository: https://github.com/sauloroncon/strategic_logger
-issue_tracker: https://github.com/sauloroncon/strategic_logger/issues
-homepage: https://github.com/sauloroncon/strategic_logger
-documentation: https://github.com/sauloroncon/strategic_logger/blob/7ec253313dcc9e14c1f096ac5f262cff64a8997c/README.md
+version: 1.3.0
+repository: https://github.com/Hypn-Tech/strategic_logger
+issue_tracker: https://github.com/Hypn-Tech/strategic_logger/issues
+homepage: https://github.com/Hypn-Tech/strategic_logger
+documentation: https://github.com/Hypn-Tech/strategic_logger/blob/master/README.md
 topics: [logger, logging, flutter, dart, performance]
 
 environment:
